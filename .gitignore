@@ -1,0 +1,4 @@
+# Personal map data. The converter writes here when run from this tree;
+# it is nobody else's business and must never be published.
+libs/
+awmap-*.lua
