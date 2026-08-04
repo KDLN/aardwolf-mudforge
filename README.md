@@ -89,9 +89,16 @@ Double-click the launcher for your platform in `tools/`:
 
 It looks for your `Aardwolf.db` in the usual places and offers it; otherwise it
 opens a file picker. Your MUSHclient files are opened read-only and never
-modified. Then restart MudForge, open `/awcore`, and press **Import map** — a
-23,000 room map takes about seven seconds and you can keep playing while it
-runs.
+modified.
+
+It writes `aardwolf-map.json` to your Desktop. In MudForge, open the map
+panel's `⋯` menu, choose **Import Map Data**, pick that file, and restart — the
+map view is built at startup and won't show the new rooms until it is.
+
+Existing map settings are kept: the tool reads the most recent export MudForge
+has written and carries your zoom, node mode and terrain colours across. The
+one thing it overrides is `maxRooms`, which ships at 10,000 and would truncate
+a 22,946 room map.
 
 Needs Python 3, which ships with macOS developer tools and most Linux
 distributions; on Windows get it from python.org and tick *Add Python to PATH*.
@@ -102,8 +109,9 @@ to paste the path, which works just as well.
 plugin cannot read a file it didn't write — `loadPluginFile` returns nil for
 any path outside its own storage, and `readFile`/`loadFile` don't exist — and
 the storage it *can* read lives in IndexedDB inside the app, where nothing
-outside can put anything. The conversion has to happen out here; the import
-itself, with its progress bars, is in the panel where it belongs.
+outside can put anything. So the conversion happens out here and MudForge's own
+importer does the rest, which is also why the whole thing is one file and one
+click rather than a plugin writing 22,946 rooms an API call at a time.
 
 ---
 
