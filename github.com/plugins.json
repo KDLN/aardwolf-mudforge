@@ -11,7 +11,7 @@
   {
     "id": "aw-core",
     "name": "Aardwolf Core",
-    "version": "1.12.3",
+    "version": "1.12.4",
     "author": "Solao",
     "description": "GMCP negotiation and session bootstrap. Required by the other Aardwolf panels.",
     "category": "utilities",

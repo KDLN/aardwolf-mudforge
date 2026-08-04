@@ -74,6 +74,39 @@ do the same things for anyone who'd rather type.
 
 ---
 
+## Bringing your MUSHclient map across
+
+If you've mapped Aardwolf in MUSHclient, that map can come with you — rooms,
+areas, terrain, doors and portals.
+
+Double-click the launcher for your platform in `tools/`:
+
+| | |
+|---|---|
+| macOS | `Import Aardwolf Map.command` |
+| Windows | `Import Aardwolf Map.bat` |
+| Linux | `import-aardwolf-map.sh` |
+
+It looks for your `Aardwolf.db` in the usual places and offers it; otherwise it
+opens a file picker. Your MUSHclient files are opened read-only and never
+modified. Then restart MudForge, open `/awcore`, and press **Import map** — a
+23,000 room map takes about seven seconds and you can keep playing while it
+runs.
+
+Needs Python 3, which ships with macOS developer tools and most Linux
+distributions; on Windows get it from python.org and tick *Add Python to PATH*.
+The Linux file dialog additionally wants `python3-tk` — without it you're asked
+to paste the path, which works just as well.
+
+**Why isn't this a button in the panel?** Because it can't be. A MudForge
+plugin cannot read a file it didn't write — `loadPluginFile` returns nil for
+any path outside its own storage, and `readFile`/`loadFile` don't exist — and
+the storage it *can* read lives in IndexedDB inside the app, where nothing
+outside can put anything. The conversion has to happen out here; the import
+itself, with its progress bars, is in the panel where it belongs.
+
+---
+
 ## Portraits
 
 Character Info picks an avatar from your GMCP `char.base` — race, primary
