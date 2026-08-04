@@ -184,8 +184,13 @@ def main():
     print(f"\n  Reading {os.path.basename(db)} ({size} KB)")
     print("  Converting, this takes a few seconds...\n")
 
+    # somewhere temporary, never inside a checkout: see the note in
+    # import-mushmap.py about 5.5MB of personal map reaching a public repo
+    import tempfile
+    work = tempfile.mkdtemp(prefix="awmap-")
+
     rc = subprocess.call([sys.executable,
-                          os.path.join(HERE, "import-mushmap.py"), db])
+                          os.path.join(HERE, "import-mushmap.py"), db, work])
     if rc != 0:
         print("\n  Conversion failed.")
         return rc
@@ -199,7 +204,7 @@ def main():
     import glob
     import shutil
 
-    chunks = sorted(glob.glob(os.path.join(ROOT, "libs", "awmap-*.lua")))
+    chunks = sorted(glob.glob(os.path.join(work, "awmap-*.lua")))
     if not chunks:
         print("\n  Converted, but produced no output. Nothing staged.")
         return 1
@@ -228,6 +233,8 @@ def main():
 
     for c in glob.glob(os.path.join(lib, "awmap-*.lua")):
         os.remove(c)
+
+    shutil.rmtree(work, ignore_errors=True)
 
     print("  Cleaned up. Restart MudForge once more and your map is in.\n")
     return 0

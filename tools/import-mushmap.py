@@ -27,7 +27,13 @@ DEFAULT_DB = os.path.expanduser(
     "users/crossover/Desktop/MUSHclient/Aardwolf.db")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "libs")
+
+#
+# Second argument wins. Writing into <root>/libs by default put 5.5MB of one
+# person's map inside a git checkout, and 'build.sh release' runs 'git add -A' —
+# so it went straight to a public repo. The caller passes somewhere temporary.
+#
+OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "libs")
 
 ROOMS_PER_CHUNK = 750
 EXITS_PER_CHUNK = 2000
