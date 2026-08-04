@@ -168,6 +168,42 @@ background-image: url("remote.png"), url("data:image/png;base64,…");
 
 ---
 
+## The API surface is much bigger than the docs
+
+`/awcore api` enumerates `_G` and prints every bound function. On 1.2.2011
+that's **326 functions**, most of them undocumented. Before concluding a
+plugin can't do something, run it — reasoning from the docs, or from the
+shape of the IndexedDB stores, gets it wrong.
+
+Two compatibility layers are in there alongside the native API:
+
+| layer | examples |
+|---|---|
+| MUSHclient | `Send`, `Note`, `ColourNote`, `Execute`, `GetVariable`, `SetVariable`, `EnableTrigger`, `DoAfterSpecial`, `SaveState` |
+| Mudlet | `addSpecialExit`, `getExitStubs1`, `setCustomEnvColor`, `tempRegexTrigger`, `tempTrigger`, `getRoomUserData`, `echo`, `cecho` |
+
+**The mapper is fully writable**, which matters because the map's own
+IndexedDB `connections` store is only `fromRoom / toRoom / direction / level /
+weight` — no command field. Reading that schema suggests custom exits are
+impossible. They aren't; they're just held somewhere else:
+
+```
+addSpecialExit  removeSpecialExit  clearSpecialExits  getSpecialExits
+setDoor  getDoors  lockExit  hasExitLock  setExitStub  connectExitStub
+addRoom  deleteRoom  setExit  setMapExit  setRoomName  setRoomArea
+setRoomCoordinates  setRoomUserData  setRoomColor  setCustomEnvColor
+createMapperWidget  importMapJson  exportMapJson  refreshMap
+gotoRoom  getPath  findPath  setWalkDelay  setFastWalk  stopWalk
+onMapReady  onMapUpdate  onMapRoomClick  onRoomChange
+```
+
+So an Aardwolf mapper is a plugin driving the built-in engine, not a
+replacement for it. `/awcore map` prints what each reader returns for the
+room you're standing in — names alone don't give away argument order or
+return shape.
+
+---
+
 ## GMCP
 
 ### `onGMCPUpdate` gives you the packet. `getGMCPData` gives you the store.

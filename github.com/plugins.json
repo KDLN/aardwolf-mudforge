@@ -2,7 +2,7 @@
   {
     "id": "aw-chat",
     "name": "Aardwolf Comms",
-    "version": "1.10.3",
+    "version": "1.11.1",
     "author": "Solao",
     "description": "Channel panel with tabs, per-channel routing, gagging and custom regex captures.",
     "category": "widgets",
@@ -11,7 +11,7 @@
   {
     "id": "aw-core",
     "name": "Aardwolf Core",
-    "version": "1.5.2",
+    "version": "1.8.0",
     "author": "Solao",
     "description": "GMCP negotiation and session bootstrap. Required by the other Aardwolf panels.",
     "category": "utilities",
@@ -38,7 +38,7 @@
   {
     "id": "aw-snd",
     "name": "Aardwolf Search and Destroy",
-    "version": "1.9.3",
+    "version": "1.11.0",
     "author": "Solao",
     "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
     "category": "utilities",
