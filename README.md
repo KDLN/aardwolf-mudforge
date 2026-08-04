@@ -105,13 +105,18 @@ distributions; on Windows get it from python.org and tick *Add Python to PATH*.
 The Linux file dialog additionally wants `python3-tk` — without it you're asked
 to paste the path, which works just as well.
 
-**Why isn't this a button in the panel?** Because it can't be. A MudForge
-plugin cannot read a file it didn't write — `loadPluginFile` returns nil for
-any path outside its own storage, and `readFile`/`loadFile` don't exist — and
-the storage it *can* read lives in IndexedDB inside the app, where nothing
-outside can put anything. So the conversion happens out here and MudForge's own
-importer does the rest, which is also why the whole thing is one file and one
-click rather than a plugin writing 22,946 rooms an API call at a time.
+None of this involves the plugins. The tool reads a SQLite file and writes
+JSON; MudForge imports it natively. You can use it without installing anything
+else here, and the panels work fine without ever running it.
+
+It ended up in this repo because it was written alongside them. An earlier
+version *did* do the import from a plugin, writing every room through the
+mapper API — which meant reverse-engineering each call, and each wrong guess
+failed silently: `addSpecialExit` wants the command in the middle,
+`updateMapRoom` replaces the record rather than merging, `pcall` doesn't catch
+a `false` return, rooms without `lastVisited` are never drawn, and `maxRooms`
+caps at 10,000. The export format gets all of that right by construction, so
+that code is gone.
 
 ---
 

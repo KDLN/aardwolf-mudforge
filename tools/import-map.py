@@ -5,6 +5,10 @@
 # Pick your MUSHclient Aardwolf.db and get a file MudForge's own map importer
 # takes. macOS, Windows and Linux.
 #
+# Standalone. It doesn't need the Aardwolf plugins and they don't need it —
+# nothing here talks to a plugin, and MudForge does the importing itself. It
+# lives in this repo because that's who wanted it, not because it's part of it.
+#
 # It writes MudForge's export format, worked out from a real export rather than
 # guessed: rooms carry their exits inline, special exits sit in the same object
 # keyed by the command, and every room needs lastVisited and timesVisited or the
