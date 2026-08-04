@@ -38,7 +38,7 @@
   {
     "id": "aw-snd",
     "name": "Aardwolf Search and Destroy",
-    "version": "1.9.2",
+    "version": "1.9.3",
     "author": "Solao",
     "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
     "category": "utilities",
