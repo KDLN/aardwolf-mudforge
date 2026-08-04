@@ -197,6 +197,12 @@ gotoRoom  getPath  findPath  setWalkDelay  setFastWalk  stopWalk
 onMapReady  onMapUpdate  onMapRoomClick  onRoomChange
 ```
 
+**`addSpecialExit(from, command, to)`** — command in the MIDDLE. Not Mudlet's
+`(from, to, direction)`, despite the name coming from that compatibility layer.
+The wrong order returns `false` and leaves `getSpecialExits` empty; it does not
+throw, so a `pcall` around it reports success and the exits are silently
+dropped. Treat a `false` return from any mapper writer as a failure.
+
 So an Aardwolf mapper is a plugin driving the built-in engine, not a
 replacement for it. `/awcore map` prints what each reader returns for the
 room you're standing in — names alone don't give away argument order or
