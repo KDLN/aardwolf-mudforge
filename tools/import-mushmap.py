@@ -17,6 +17,7 @@
 #
 # Output lands in libs/ and is gitignored — it's a personal map, not source.
 
+import json
 import os
 import re
 import sqlite3
@@ -161,6 +162,135 @@ def lay_out(rooms, links):
     return pos, overlaps
 
 
+#
+# MudForge's own settings block, read out of a real export. Reproduced whole
+# because the importer replaces settings rather than merging, and handing it a
+# partial one would leave the map with no terrain colours.
+#
+# maxRooms is the reason this is here at all: it ships at 10,000 and a
+# MUSHclient Aardwolf map is 22,946.
+#
+SETTINGS = {
+    "showVnums": False, "showBannerVnum": True, "zoomLevel": 1,
+    "terrainStyles": [
+        {"name": "default", "color": "#3498db"},
+        {"name": "inside",  "color": "#2c3e50"},
+        {"name": "field",   "color": "#27ae60"},
+        {"name": "forest",  "color": "#16a085"},
+        {"name": "water",   "color": "#2980b9"},
+        {"name": "city",    "color": "#8e44ad"},
+        {"name": "road",    "color": "#95a5a6"},
+    ],
+    "autoSave": True, "maxRooms": 100000, "fastWalk": False,
+    "customExitTimeout": 5, "walkStepDelayMs": 0, "nodeMode": False,
+    "nodeLinkLength": 20, "nodeLineColor": "#ffffff",
+    "recentRoomsCount": 100, "recentRoomsColor": "#ffaf00",
+}
+
+# the export writes n/e/s/w/u/d, not the long names
+SHORT = {"north": "n", "south": "s", "east": "e", "west": "w",
+         "up": "u", "down": "d"}
+
+
+def load_settings(path):
+    """Lift settings and env colours out of an export MudForge wrote.
+
+    Better than shipping defaults: whatever you've set in the map panel —
+    zoom, node mode, terrain colours — survives the import instead of being
+    reset to whatever was current the day this was written.
+    """
+    try:
+        with open(path, encoding="utf-8") as fh:
+            d = json.load(fh)
+    except (OSError, ValueError):
+        return None, None
+
+    if not isinstance(d, dict):
+        return None, None
+
+    st = d.get("settings") if isinstance(d.get("settings"), dict) else None
+    ex = d.get("extras") if isinstance(d.get("extras"), dict) else {}
+    return st, (ex.get("envColors") if isinstance(ex.get("envColors"), dict) else None)
+
+
+def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
+               settings=None, env_colors=None):
+    """MudForge's own map format, straight from an export of a live map.
+
+    Rooms carry their exits inline as {direction: vnum} — there's no separate
+    connections list — and lastVisited/timesVisited are on every single one.
+    That last part isn't cosmetic: the renderer draws the rooms you've visited
+    and puts a stub where a neighbour exists but isn't drawn, which is why an
+    import that skipped those fields showed two rooms and four arrows in an
+    area holding two hundred and eighty-five.
+
+    Special exits go in the same exits object, keyed by the command rather than
+    a direction. A live export had none to copy, so this is the one part
+    modelled on addSpecialExit(from, COMMAND, to) rather than observed — a
+    wrong guess costs the portals and nothing else.
+    """
+    out = []
+
+    for uid, r in rooms.items():
+        x, y, z = pos.get(uid, (0, 0, 0))
+
+        exits = {}
+        for direction, dest in links.get(uid, ()):
+            exits[SHORT.get(direction, direction)] = dest
+        for command, dest in specials.get(uid, ()):
+            exits[command] = dest
+
+        room = {
+            "num": uid,
+            "name": r["name"],
+            "zone": r["area"],
+            "terrain": r["terrain"],
+            "x": x, "y": y, "z": z,
+            "exits": exits,
+            "lastVisited": stamp,
+            "timesVisited": 1,
+        }
+
+        data = {}
+        if titles.get(r["area"]):
+            data["aard.area"] = titles[r["area"]]
+        if r.get("notes"):
+            data["aard.notes"] = r["notes"]
+        if data:
+            room["userData"] = data
+
+        if r.get("info"):
+            room["details"] = r["info"]
+
+        out.append(room)
+
+    #
+    # Your settings where we have them, ours where we don't — except maxRooms,
+    # which ships at 10,000 and would quietly truncate a 22,946 room map. It
+    # only ever gets raised, never lowered.
+    #
+    conf = dict(SETTINGS)
+    if isinstance(settings, dict):
+        conf.update(settings)
+
+    need = int(len(out) * 1.5) + 1000
+    if int(conf.get("maxRooms") or 0) < need:
+        conf["maxRooms"] = need
+
+    doc = {
+        "rooms": out,
+        "settings": conf,
+        "state": {"levels": {}, "currentLevel": 0, "currentRoom": None},
+        "labels": [],
+        "extras": {"envColors": env_colors or {}, "knownAreas": sorted(areas)},
+    }
+
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(doc, fh, separators=(",", ":"))
+
+    return len(out)
+
+
 def write_chunk(path, header, rows):
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("-- generated by tools/import-mushmap.py — do not edit\n")
@@ -204,7 +334,7 @@ def main():
     # until every room knows where it sits
     ###
     plain, doors, special = [], [], []
-    links = {}
+    links, specials = {}, {}
 
     for e in con.execute("SELECT dir, fromuid, touid FROM exits"):
         kind, direction, command = classify(e["dir"])
@@ -225,6 +355,8 @@ def main():
         # since a portal's other end has no spatial relationship to this one
         if direction:
             links.setdefault(int(frm), []).append((direction, int(to)))
+        else:
+            specials.setdefault(int(frm), []).append((command, int(to)))
 
     keep = {}
     for r in rooms:
@@ -232,6 +364,10 @@ def main():
             continue
         keep[int(r["uid"])] = {
             "area": r["area"] or "",
+            "name": r["name"] or "",
+            "terrain": r["terrain"] or "",
+            "info": r["info"] or "",
+            "notes": r["notes"] or "",
             "x": r["x"], "y": r["y"], "z": r["z"],
         }
 
@@ -298,6 +434,30 @@ def main():
         lua_num(v["uid"]), lua_str(v["name"]), lua_num(v["color"]))
         for v in con.execute("SELECT * FROM environments")]
 
+    ###
+    # MudForge's own format. This is the one that matters now: its map importer
+    # takes it directly, so none of the per-room API calls — and none of their
+    # argument-order surprises — are involved.
+    ###
+    titles = {}
+    keys = set()
+    for a in con.execute("SELECT uid, name FROM areas"):
+        if a["uid"]:
+            keys.add(a["uid"])
+            if a["name"]:
+                titles[a["uid"]] = a["name"]
+
+    stamp = int(os.path.getmtime(db) * 1000)
+
+    # third argument: an export MudForge wrote, to inherit map settings from
+    conf, env_colors = (None, None)
+    if len(sys.argv) > 3 and os.path.isfile(sys.argv[3]):
+        conf, env_colors = load_settings(sys.argv[3])
+
+    json_path = os.path.join(OUT, "aardwolf-map.json")
+    n_json = write_json(json_path, keep, links, specials, pos, keys, titles,
+                        stamp, conf, env_colors)
+
     write_chunk(os.path.join(OUT, "awmap-areas.lua"), "-- areas", areas)
     write_chunk(os.path.join(OUT, "awmap-envs.lua"), "-- environments", envs)
 
@@ -331,6 +491,8 @@ def main():
           + (f"   ({skipped} nomap room(s) skipped)" if skipped else ""))
     print(f"exits     {len(plain)} plain, {len(doors)} door, {len(special)} special")
     print(f"laid out  {len(pos)} room(s), {overlaps} overlapping cell(s)")
+    print(f"json      {n_json} room(s) -> {os.path.basename(json_path)} "
+          f"({os.path.getsize(json_path) // 1024} KB)")
     print(f"areas     {len(areas)}")
     print(f"envs      {len(envs)}")
     print(f"wrote     {OUT} ({total // 1024} KB)")

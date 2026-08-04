@@ -49,7 +49,7 @@ def app_dirs():
             os.path.join(home, ".local", "share", ident)]
 
 
-def find_lib_dir():
+def find_lib_dir():   # kept for the staged path; unused by the JSON route
     for base in app_dirs():
         lib = os.path.join(base, "libs")
         if os.path.isdir(lib):
@@ -124,6 +124,36 @@ def pick_file(start):
         return typed or None
 
 
+def newest_export():
+    """The most recent map export MudForge has written, if there is one.
+
+    Its settings get carried into the generated file, so zoom, node mode and
+    terrain colours survive the import rather than reverting to defaults. The
+    client names them map-data-<date>.json and they land wherever the browser
+    puts downloads.
+    """
+    home = os.path.expanduser("~")
+    found = []
+
+    for folder in ("Downloads", "Desktop", "Documents", ""):
+        base = os.path.join(home, folder) if folder else home
+        if not os.path.isdir(base):
+            continue
+        try:
+            for name in os.listdir(base):
+                if name.startswith("map-data") and name.endswith(".json"):
+                    full = os.path.join(base, name)
+                    found.append((os.path.getmtime(full), full))
+        except OSError:
+            continue
+
+    if not found:
+        return None
+
+    found.sort()
+    return found[-1][1]
+
+
 def is_sqlite(path):
     try:
         with open(path, "rb") as fh:
@@ -138,13 +168,6 @@ def main():
     print("  Converts a MUSHclient mapper database into something MudForge can read.")
     print("  Your MUSHclient files are opened read-only and never modified.")
     print()
-
-    lib = find_lib_dir()
-    if not lib:
-        print("  MudForge doesn't appear to be installed — none of these exist:")
-        for base in app_dirs():
-            print("    " + base)
-        return 1
 
     db = sys.argv[1] if len(sys.argv) > 1 else None
 
@@ -189,54 +212,61 @@ def main():
     import tempfile
     work = tempfile.mkdtemp(prefix="awmap-")
 
-    rc = subprocess.call([sys.executable,
-                          os.path.join(HERE, "import-mushmap.py"), db, work])
+    cmd = [sys.executable, os.path.join(HERE, "import-mushmap.py"), db, work]
+
+    export = newest_export()
+    if export:
+        print(f"  Keeping your map settings from {os.path.basename(export)}")
+        cmd.append(export)
+
+    rc = subprocess.call(cmd)
     if rc != 0:
         print("\n  Conversion failed.")
         return rc
 
     ###
-    # Staged, not installed. 74 files and 5.5MB of Lua left in a folder the
-    # client parses at startup is what wedged MudForge at 0% CPU with plugins
-    # never finishing loading — so they go in for the import and come straight
-    # back out.
+    # One file, and MudForge's own importer takes it.
+    #
+    # The earlier route staged 74 Lua chunks into the client's libs folder and
+    # had a plugin write all 22,946 rooms one API call at a time. That meant
+    # reverse-engineering each writer — addSpecialExit wants the command in the
+    # MIDDLE, updateMapRoom replaces the record instead of merging, rooms need
+    # lastVisited and timesVisited or the renderer won't draw them — and 5.5MB
+    # of Lua in a folder the client parses at startup wedged it more than once.
+    #
+    # Its export format does all of that correctly by construction.
     ###
     import glob
     import shutil
 
-    chunks = sorted(glob.glob(os.path.join(work, "awmap-*.lua")))
-    if not chunks:
-        print("\n  Converted, but produced no output. Nothing staged.")
+    src = os.path.join(work, "aardwolf-map.json")
+    if not os.path.isfile(src):
+        print("\n  Converted, but produced no map file.")
         return 1
 
-    for c in chunks:
-        shutil.copy2(c, lib)
+    desktop = os.path.join(os.path.expanduser("~"), "Desktop")
+    dest_dir = desktop if os.path.isdir(desktop) else os.path.expanduser("~")
+    dest = os.path.join(dest_dir, "aardwolf-map.json")
 
-    print(f"\n  Staged {len(chunks)} file(s) into {lib}")
+    shutil.copy2(src, dest)
+    shutil.rmtree(work, ignore_errors=True)
+
+    size = os.path.getsize(dest) // 1024
+    print(f"\n  Wrote {dest}  ({size} KB)")
     print("""
   ------------------------------------------------------------------
   Now, in MudForge:
 
-    1. Quit and reopen MudForge, so it picks up the staged files
-    2. Type  /awcore  to open Aardwolf Core
-    3. Under MAP IMPORT, press IMPORT MAP
-    4. Watch the bars — a few seconds, and you can keep playing
+    1. Open the map panel and its  ...  menu
+    2. Choose  Import Map Data
+    3. Pick  aardwolf-map.json  from your Desktop
+    4. Restart MudForge
 
-  Come back here when it says complete, and press return.
+  The map view is built when the client starts, so it won't show the
+  new rooms until that last step.
   ------------------------------------------------------------------
 """)
-
-    try:
-        input()
-    except EOFError:
-        pass
-
-    for c in glob.glob(os.path.join(lib, "awmap-*.lua")):
-        os.remove(c)
-
-    shutil.rmtree(work, ignore_errors=True)
-
-    print("  Cleaned up. Restart MudForge once more and your map is in.\n")
+    return 0
     return 0
 
 
