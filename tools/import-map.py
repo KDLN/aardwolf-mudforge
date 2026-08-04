@@ -2,15 +2,14 @@
 #
 # import-map.py — Sean Stoves (Solao), 2026-08-04
 #
-# The whole user-facing side of the map import: pick your MUSHclient
-# Aardwolf.db, convert it, stage it where MudForge can reach it, and clear it
-# out again afterwards. macOS, Windows and Linux.
+# Pick your MUSHclient Aardwolf.db and get a file MudForge's own map importer
+# takes. macOS, Windows and Linux.
 #
-# This has to live outside the client, and not for want of trying. A MudForge
-# plugin cannot read a file it didn't write — loadPluginFile returns nil for any
-# path outside its own storage, readFile and loadFile don't exist — and the
-# storage it CAN read is IndexedDB inside the app, which nothing outside can
-# write to. There is no arrangement where the panel opens your database itself.
+# It writes MudForge's export format, worked out from a real export rather than
+# guessed: rooms carry their exits inline, special exits sit in the same object
+# keyed by the command, and every room needs lastVisited and timesVisited or the
+# renderer won't draw it. maxRooms ships at 10,000 against a 22,946 room map, so
+# it gets raised to fit.
 #
 #   python3 tools/import-map.py [path/to/Aardwolf.db]
 #
