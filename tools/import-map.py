@@ -24,47 +24,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
 
-def app_dirs():
-    """Where MudForge keeps its libs, per platform.
-
-    Tauri puts app data under the bundle identifier: Application Support on
-    macOS, Roaming on Windows, and either .config or .local/share on Linux
-    depending on how the app was built. Both Linux spellings are checked
-    rather than guessed at.
-    """
-    home = os.path.expanduser("~")
-    ident = "com.mudforge.app"
-    system = platform.system()
-
-    if system == "Darwin":
-        return [os.path.join(home, "Library", "Application Support", ident)]
-
-    if system == "Windows":
-        roaming = os.environ.get("APPDATA") or os.path.join(home, "AppData", "Roaming")
-        local = os.environ.get("LOCALAPPDATA") or os.path.join(home, "AppData", "Local")
-        return [os.path.join(roaming, ident), os.path.join(local, ident)]
-
-    return [os.path.join(home, ".config", ident),
-            os.path.join(home, ".local", "share", ident)]
-
-
-def find_lib_dir():   # kept for the staged path; unused by the JSON route
-    for base in app_dirs():
-        lib = os.path.join(base, "libs")
-        if os.path.isdir(lib):
-            return lib
-
-    # the app exists but has never created libs/, which is normal on a fresh
-    # install — make it rather than telling someone to
-    for base in app_dirs():
-        if os.path.isdir(base):
-            lib = os.path.join(base, "libs")
-            os.makedirs(lib, exist_ok=True)
-            return lib
-
-    return None
-
-
 def likely_databases():
     """Where an Aardwolf.db tends to be, per platform."""
     home = os.path.expanduser("~")
