@@ -76,10 +76,16 @@ do the same things for anyone who'd rather type.
 
 ## Bringing your MUSHclient map across
 
-If you've mapped Aardwolf in MUSHclient, that map can come with you — rooms,
-areas, terrain, doors and portals.
+If you've mapped Aardwolf in MUSHclient, that map can come with you — every
+room, its area, terrain, doors and portals. A fully mapped Aardwolf is around
+34,000 rooms and imports in one go.
 
-Double-click the launcher for your platform in `tools/`:
+**1. Export your current map first.** In MudForge, open the map panel's `⋯`
+menu and choose **Export Map Data**. This is optional but worth doing: the tool
+reads the most recent export it can find and carries your settings across, so
+zoom, node mode and any terrain colours you've set survive the import.
+
+**2. Run the tool.** Double-click the launcher for your platform in `tools/`:
 
 | | |
 |---|---|
@@ -87,36 +93,63 @@ Double-click the launcher for your platform in `tools/`:
 | Windows | `Import Aardwolf Map.bat` |
 | Linux | `import-aardwolf-map.sh` |
 
-It looks for your `Aardwolf.db` in the usual places and offers it; otherwise it
-opens a file picker. Your MUSHclient files are opened read-only and never
-modified.
+It looks for `Aardwolf.db` in the usual places and offers what it finds;
+otherwise it opens a file picker. Your MUSHclient files are opened read-only
+and are never modified. Conversion takes a few seconds and writes
+`aardwolf-map.json` to your Desktop.
 
-It writes `aardwolf-map.json` to your Desktop. In MudForge, open the map
-panel's `⋯` menu, choose **Import Map Data**, pick that file, and restart — the
-map view is built at startup and won't show the new rooms until it is.
+**3. Import it.** Back in MudForge, map panel `⋯` menu → **Import Map Data** →
+pick that file.
 
-Existing map settings are kept: the tool reads the most recent export MudForge
-has written and carries your zoom, node mode and terrain colours across. The
-one thing it overrides is `maxRooms`, which ships at 10,000 and would truncate
-a 22,946 room map.
+**4. Restart MudForge.** The map view is built when the client starts, so it
+won't show the new rooms until it is. This step is not optional and a skipped
+restart looks exactly like a failed import.
 
-Needs Python 3, which ships with macOS developer tools and most Linux
-distributions; on Windows get it from python.org and tick *Add Python to PATH*.
-The Linux file dialog additionally wants `python3-tk` — without it you're asked
-to paste the path, which works just as well.
+### What comes across
 
-None of this involves the plugins. The tool reads a SQLite file and writes
-JSON; MudForge imports it natively. You can use it without installing anything
-else here, and the panels work fine without ever running it.
+Rooms keep their Aardwolf vnum as the room id, so anything you have already
+mapped in MudForge is the same room rather than a duplicate. Along with the
+name, area and terrain, each room carries its exits, its `details` flags —
+shop, bank, healer, trainer, questor, safe, pk, maze, guild — and any portal or
+door as a custom exit.
 
-It ended up in this repo because it was written alongside them. An earlier
-version *did* do the import from a plugin, writing every room through the
+Terrain colours come from MUSHclient's own palette, converted from the ANSI
+indices it stores. Colours you have set yourself are never overwritten: after
+one import your export already holds MUSHclient's colours, so anything
+different is a deliberate choice and is left alone.
+
+Room coordinates are worked out here. MUSHclient stores them for only a
+fraction of rooms — its mapper recomputes the layout from exits every time it
+draws and never writes most of it down — so each area is walked breadth-first
+and given a grid position per exit. Areas that *did* have coordinates keep
+roughly the shape you gave them.
+
+`maxRooms` is raised to fit. It ships at 10,000, which would silently truncate
+any real map.
+
+Nothing else is added. No symbols, no markers — the file says what MUSHclient
+says, so importing resets the map rather than merging in history.
+
+### Requirements
+
+Python 3: bundled with macOS developer tools and most Linux distributions; on
+Windows get it from [python.org](https://www.python.org/downloads/) and tick
+*Add Python to PATH*. On Linux the file dialog also wants `python3-tk`
+(`apt install python3-tk`, `dnf install python3-tkinter`) — without it you're
+asked to paste the path instead, which works just as well.
+
+### This has nothing to do with the plugins
+
+The tool reads a SQLite file and writes JSON; MudForge imports it natively. Use
+it without installing anything else here, and the panels work fine without ever
+running it. It lives in this repo because it was written alongside them.
+
+An earlier version *did* import from a plugin, writing every room through the
 mapper API — which meant reverse-engineering each call, and each wrong guess
 failed silently: `addSpecialExit` wants the command in the middle,
 `updateMapRoom` replaces the record rather than merging, `pcall` doesn't catch
-a `false` return, rooms without `lastVisited` are never drawn, and `maxRooms`
-caps at 10,000. The export format gets all of that right by construction, so
-that code is gone.
+a `false` return, and rooms without `lastVisited` are never drawn. The export
+format gets all of that right by construction, so that code is gone.
 
 ---
 
