@@ -1,5 +1,21 @@
 # Writing MudForge plugins — what the docs don't tell you
 
+> **There is now an official authoring guide**, and it is the reference. Read it
+> first. What follows is what this codebase learned the hard way, kept because
+> most of it is still not in there — and because three entries below were
+> measured against a running client rather than inferred, which is the only
+> reason they're trustworthy at all.
+>
+> Confirmed by the official guide, so no longer guesses:
+> `onLine(sessionId, rawLine, cleanLine)`; `addSpecialExit(from, command, to)`
+> (command in the middle); mapper lists being 0-indexed; `addTimer` returning
+> `""` while disconnected; `saveTable`/`savePluginFile` with scope `"global"`
+> being shared app-wide **across every plugin**, keyed only by name — prefix
+> yours or you will clobber someone.
+>
+> Corrected by it: trigger callbacks are `(captures, line, wildcards, rawLine)`
+> — captures FIRST. Code here that sniffs the arguments predates knowing that.
+
 MudForge parses Lua with `luaparse` and **transpiles it to JavaScript**.
 There is no Lua VM. Most of the time that's invisible; these are the places
 it isn't. Every one below cost a debugging session, and `luac -p` passes

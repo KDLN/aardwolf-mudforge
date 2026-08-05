@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T18:22:28Z",
+  "generated": "2026-08-05T18:30:40Z",
   "pluginCount": 8,
   "plugins": [
     {
