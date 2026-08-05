@@ -99,7 +99,40 @@ escape sequence in front of the text defeats the anchor.
 
 Returning `false` discards the line. Returning nothing keeps it.
 
-### 11. Don't assume the whole stdlib
+### 11. `string.find`'s `init` argument does not advance the search
+
+```lua
+-- hangs: q keeps returning the same position while from grows
+local at, from = nil, 1
+while true do
+    local q = string.find(body, needle, from, true)
+    if not q then break end
+    at, from = q, q + 1
+end
+```
+
+This locked the client hard enough to need a force quit. Every other
+`string.find` in this codebase passes `init = 1`, so it was the first use of
+the argument and nothing catches it by reading.
+
+Walk by slicing instead — the haystack is strictly shorter each pass, so it
+terminates whatever `find` does with its arguments:
+
+```lua
+local at, offset = nil, 0
+while true do
+    local q = string.find(string.sub(body, offset + 1), needle, 1, true)
+    if not q then break end
+    at = offset + q
+    offset = at
+end
+```
+
+**Put an iteration cap on any `while` driven by string length.** A loop that
+stops shrinking its input takes the whole client with it, and there is no
+error, no log line and no way to tell it from a slow machine.
+
+### 12. Don't assume the whole stdlib
 
 `table.concat(t, sep, i, j)`'s start-index form and similar corners are worth
 avoiding. `io` and `os` exist but are restricted implementations.
