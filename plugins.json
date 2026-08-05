@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T19:35:57Z",
+  "generated": "2026-08-05T19:40:50Z",
   "pluginCount": 9,
   "plugins": [
     {
@@ -65,28 +65,28 @@
     {
       "id": "aw-shop",
       "name": "Aardwolf Shop",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": "Solao",
       "description": "Shop stock in a panel. Click a name to appraise it, a number to buy that many.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-shop.json",
       "format": "json",
-      "sha256": "e807b9435812cb2c8291e7dfea65dfe508a088c4a1fa745e343197fbcfbfda69",
-      "size": 38269,
+      "sha256": "a9dd9ae0d890cfb58214f71f2578a6cbdd56d01d88525c8713c41acc8ce21108",
+      "size": 42672,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
     {
       "id": "aw-snd",
       "name": "Aardwolf Search and Destroy",
-      "version": "1.12.4",
+      "version": "1.12.5",
       "author": "Solao",
       "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
       "category": "utilities",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-snd.json",
       "format": "json",
-      "sha256": "eb1efe8ad95d19a44df72d0a95ef3cfbbdb3ec30e3a9c0cbf7164b13c7a3bcd9",
-      "size": 199937,
+      "sha256": "3d4c060dcea17748666e2d428f1462da08e43cd08dbad7955fea1fd6751a5df0",
+      "size": 199938,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
@@ -121,14 +121,14 @@
     {
       "id": "aw-who",
       "name": "Aardwolf Players",
-      "version": "1.11.1",
+      "version": "1.11.2",
       "author": "Solao",
       "description": "Who list with per-player whois and finger, a searchable history and timed sweeps.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.json",
       "format": "json",
-      "sha256": "0d79ae602bb5cb3b91fdaf7875f5b12675bcecc3f5f0fde11d11aeb666875e2c",
-      "size": 40710,
+      "sha256": "254895d8d2d182c666bedb3f52cf851ac787299eb30bff2b419b2a0f0f25817c",
+      "size": 40782,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     }
