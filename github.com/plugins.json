@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T22:21:15Z",
+  "generated": "2026-08-05T22:23:19Z",
   "pluginCount": 10,
   "plugins": [
     {
@@ -51,14 +51,14 @@
     {
       "id": "aw-loot",
       "name": "Aardwolf Loot Tracker",
-      "version": "1.10.0",
+      "version": "1.10.1",
       "author": "Solao",
       "description": "Records what drops from what, shop stock and room resources, and parses every id box that scrolls past.",
       "category": "utilities",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-loot.json",
       "format": "json",
-      "sha256": "4639611cc972805788dbef70cff9e5162208ce24eb8cfaff7dd34bfe17b88ea6",
-      "size": 112508,
+      "sha256": "0d4b6ca54aad1ad962de4e0e712efe052d307588fbc236e38a9479a9ac6e8800",
+      "size": 113254,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
@@ -135,14 +135,14 @@
     {
       "id": "aw-who",
       "name": "Aardwolf Players",
-      "version": "1.13.0",
+      "version": "1.13.1",
       "author": "Solao",
       "description": "Who list with per-player whois and finger, a searchable history and timed sweeps.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.json",
       "format": "json",
-      "sha256": "eeb659f1f61cdd645f7156ac63835a93133fca1e2e61f38c583f744bac133399",
-      "size": 47471,
+      "sha256": "c50ed80dc8f50f6773a0235ca8bf8ac9f0826bd9454863af6bc2b263c3151c15",
+      "size": 48368,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     }
