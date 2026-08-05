@@ -209,9 +209,14 @@ def terrain_styles(con, existing):
     just the forty-odd currently in use — a room in an area you map later
     already has its colour waiting.
 
-    Whatever the client already had is kept underneath: a colour you set by hand
-    for a terrain MUSHclient never knew about survives, and 'default' stays put
-    since that's the fallback for anything unmatched.
+    The client's own colours WIN. That's the opposite of the first version, and
+    the reason is that after one import the client's export already carries
+    MUSHclient's colours — so any difference from them is something you changed
+    on purpose. Overriding would have quietly reverted shop to green on the next
+    run, an hour after it was set to orange.
+
+    MUSHclient therefore fills gaps rather than overwriting: terrains the client
+    has never heard of get a colour, everything else is left alone.
     """
     styles = []
     seen = set()
@@ -229,13 +234,9 @@ def terrain_styles(con, existing):
 
         hexcode = ANSI_HEX.get(int(e["color"] or 7), "#95a5a6")
 
-        if name in seen:
-            # MUSHclient wins for a terrain it defines; that's the point
-            for st in styles:
-                if st["name"] == name:
-                    st["color"] = hexcode
-        else:
+        if name not in seen:
             styles.append({"name": name, "color": hexcode})
+            seen.add(name)
             added += 1
 
     return styles, added
