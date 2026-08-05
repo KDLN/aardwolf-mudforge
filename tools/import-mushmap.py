@@ -258,10 +258,15 @@ SHORT = {"north": "n", "south": "s", "east": "e", "west": "w",
 FLAG_SYMBOL = [("shop", "$"), ("healer", "+")]
 
 
-def symbol_for(details):
+def symbol_for(details, on=False):
     """First matching flag wins. A room that is both a shop and a healer is
-    rare enough that arguing about precedence costs more than it's worth."""
-    if not details:
+    rare enough that arguing about precedence costs more than it's worth.
+
+    Off unless asked for. Terrain colour already carries most of this, and
+    stamping a badge on 323 of someone's rooms is the tool deciding how their
+    map should look.
+    """
+    if not on or not details:
         return None
 
     have = {d.strip() for d in details.split(",")}
@@ -301,7 +306,8 @@ def load_settings(path):
 
 
 def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
-               settings=None, env_colors=None, styles=None, marks=None):
+               settings=None, env_colors=None, styles=None, marks=None,
+               symbols=False):
     """MudForge's own map format, straight from an export of a live map.
 
     Rooms carry their exits inline as {direction: vnum} — there's no separate
@@ -354,7 +360,7 @@ def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
         # the import has an opinion about shops and healers and none at all
         # about the room you tagged yourself.
         #
-        mark = symbol_for(r.get("info"))
+        mark = symbol_for(r.get("info"), symbols)
         if not mark and marks:
             mark = marks.get(uid)
         if mark:
@@ -476,6 +482,9 @@ def main():
     stamp = int(os.path.getmtime(db) * 1000)
 
     # third argument: an export MudForge wrote, to inherit map settings from
+    # fourth argument: any value turns shop/healer symbols on
+    symbols = len(sys.argv) > 4 and sys.argv[4] not in ("", "0", "no")
+
     conf, env_colors, marks = (None, None, {})
     if len(sys.argv) > 3 and os.path.isfile(sys.argv[3]):
         conf, env_colors, marks = load_settings(sys.argv[3])
@@ -484,7 +493,7 @@ def main():
 
     json_path = os.path.join(OUT, "aardwolf-map.json")
     n_json = write_json(json_path, keep, links, specials, pos, keys, titles,
-                        stamp, conf, env_colors, styles, marks)
+                        stamp, conf, env_colors, styles, marks, symbols)
 
     print(f"rooms     {len(rooms) - skipped}"
           + (f"   ({skipped} nomap room(s) skipped)" if skipped else ""))
@@ -492,9 +501,12 @@ def main():
     print(f"areas     {len(keys)}")
     print(f"terrain   {len(styles)} colour(s), {added} from MUSHclient")
 
-    shops = sum(1 for r in keep.values() if symbol_for(r.get("info")) == "$")
-    heals = sum(1 for r in keep.values() if symbol_for(r.get("info")) == "+")
-    print(f"symbols   {shops} shop, {heals} healer, {len(marks)} kept from your map")
+    if symbols:
+        shops = sum(1 for r in keep.values() if symbol_for(r.get("info"), True) == "$")
+        heals = sum(1 for r in keep.values() if symbol_for(r.get("info"), True) == "+")
+        print(f"symbols   {shops} shop, {heals} healer, {len(marks)} kept from your map")
+    else:
+        print(f"symbols   off; {len(marks)} kept from your map")
     print(f"laid out  {len(pos)} room(s), {overlaps} overlapping cell(s)")
     print(f"wrote     {json_path} ({os.path.getsize(json_path) // 1024} KB)")
     return 0
