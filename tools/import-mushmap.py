@@ -266,18 +266,11 @@ def load_settings(path):
     st = d.get("settings") if isinstance(d.get("settings"), dict) else None
     ex = d.get("extras") if isinstance(d.get("extras"), dict) else {}
 
-    # symbols already on rooms, so one set by hand isn't wiped by an import
-    # that had no opinion about that room
-    marks = {}
-    for r in (d.get("rooms") or []):
-        if isinstance(r, dict) and r.get("symbol") and r.get("num") is not None:
-            marks[int(r["num"])] = r["symbol"]
-
-    return st, (ex.get("envColors") if isinstance(ex.get("envColors"), dict) else None), marks
+    return st, (ex.get("envColors") if isinstance(ex.get("envColors"), dict) else None)
 
 
 def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
-               settings=None, env_colors=None, styles=None, marks=None):
+               settings=None, env_colors=None, styles=None):
     """MudForge's own map format, straight from an export of a live map.
 
     Rooms carry their exits inline as {direction: vnum} — there's no separate
@@ -325,11 +318,12 @@ def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
         if r.get("info"):
             room["details"] = r["info"]
 
-        # a symbol you set yourself, carried through. The import never adds
-        # one — the room flags are all in 'details' if anything ever wants them
-        if marks and marks.get(uid):
-            room["symbol"] = marks[uid]
-
+        #
+        # No symbols, ever. The file says what MUSHclient says and nothing more,
+        # so importing it is predictable for anyone running the tool rather than
+        # quietly inheriting whatever was on the previous map. Room flags all
+        # live in 'details' if something wants them later.
+        #
         out.append(room)
 
     #
@@ -446,15 +440,15 @@ def main():
     stamp = int(os.path.getmtime(db) * 1000)
 
     # third argument: an export MudForge wrote, to inherit map settings from
-    conf, env_colors, marks = (None, None, {})
+    conf, env_colors = (None, None)
     if len(sys.argv) > 3 and os.path.isfile(sys.argv[3]):
-        conf, env_colors, marks = load_settings(sys.argv[3])
+        conf, env_colors = load_settings(sys.argv[3])
 
     styles, added = terrain_styles(con, (conf or {}).get("terrainStyles"))
 
     json_path = os.path.join(OUT, "aardwolf-map.json")
     n_json = write_json(json_path, keep, links, specials, pos, keys, titles,
-                        stamp, conf, env_colors, styles, marks)
+                        stamp, conf, env_colors, styles)
 
     print(f"rooms     {len(rooms) - skipped}"
           + (f"   ({skipped} nomap room(s) skipped)" if skipped else ""))
