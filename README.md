@@ -124,13 +124,15 @@ draws and never writes most of it down — so each area is walked breadth-first
 and given a grid position per exit. Areas that *did* have coordinates keep
 roughly the shape you gave them.
 
-`maxRooms` is raised to fit. It ships at 10,000, which would silently truncate
-any real map.
+`maxRooms` is raised out of the way. It ships at 10,000, which would silently
+truncate any real map — but it isn't sized to your import either, since a cap
+that just fits today's rooms becomes the thing that stops you mapping more. If
+you have already set it higher, that stands.
 
 Nothing else is added. No symbols, no markers — the file says what MUSHclient
 says, so importing resets the map rather than merging in history.
 
-### Requirements
+### What you need to run it
 
 Python 3: bundled with macOS developer tools and most Linux distributions; on
 Windows get it from [python.org](https://www.python.org/downloads/) and tick

@@ -159,6 +159,11 @@ def lay_out(rooms, links):
     return pos, overlaps
 
 
+# Room cap written into the settings. Not a limit anyone should meet: a fully
+# explored Aardwolf is about 34,000 rooms, and a mapper database holds more than
+# the MUD credits you with exploring.
+ROOM_CEILING = 250000
+
 #
 # MudForge's own settings block, read out of a real export. Reproduced whole
 # because the importer replaces settings rather than merging, and handing it a
@@ -178,7 +183,7 @@ SETTINGS = {
         {"name": "city",    "color": "#8e44ad"},
         {"name": "road",    "color": "#95a5a6"},
     ],
-    "autoSave": True, "maxRooms": 100000, "fastWalk": False,
+    "autoSave": True, "maxRooms": ROOM_CEILING, "fastWalk": False,
     "customExitTimeout": 5, "walkStepDelayMs": 0, "nodeMode": False,
     "nodeLinkLength": 20, "nodeLineColor": "#ffffff",
     "recentRoomsCount": 100, "recentRoomsColor": "#ffaf00",
@@ -327,17 +332,22 @@ def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
         out.append(room)
 
     #
-    # Your settings where we have them, ours where we don't — except maxRooms,
-    # which ships at 10,000 and would quietly truncate a 22,946 room map. It
-    # only ever gets raised, never lowered.
+    # Your settings where we have them, ours where we don't — except maxRooms.
+    #
+    # It ships at 10,000 and would quietly truncate any real map, so it can't
+    # be left alone. But it isn't sized to the import either: a cap that just
+    # fits today's rooms becomes the thing that stops you mapping more. A flat
+    # ceiling well clear of a fully explored Aardwolf (~34,000) does the job
+    # without ever being the limit.
+    #
+    # Only ever raised. If you've set it higher yourself, that stands.
     #
     conf = dict(SETTINGS)
     if isinstance(settings, dict):
         conf.update(settings)
 
-    need = int(len(out) * 1.5) + 1000
-    if int(conf.get("maxRooms") or 0) < need:
-        conf["maxRooms"] = need
+    if int(conf.get("maxRooms") or 0) < ROOM_CEILING:
+        conf["maxRooms"] = ROOM_CEILING
 
     if styles:
         conf["terrainStyles"] = styles
