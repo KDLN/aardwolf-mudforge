@@ -1,8 +1,14 @@
 # Writing MudForge plugins — what the docs don't tell you
 
-> **There is now an official authoring guide**, and it is the reference. Read it
-> first. What follows is what this codebase learned the hard way, kept because
-> most of it is still not in there — and because three entries below were
+> **[docs/MUDFORGE-API-GUIDE.md](MUDFORGE-API-GUIDE.md) is the reference —
+> check it before this file and before writing anything.** It comes from
+> MudForge's own authors and they keep it current, so it outranks everything
+> here on any point the two disagree on. Re-copy it from upstream rather than
+> editing it; local edits would be lost and would make it untrustworthy for
+> exactly the questions it's the answer to.
+>
+> What follows is the delta: what this codebase learned the hard way, kept
+> because most of it is still not in there — and because several entries were
 > measured against a running client rather than inferred, which is the only
 > reason they're trustworthy at all.
 >
