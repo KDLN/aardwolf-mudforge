@@ -11,7 +11,7 @@
   {
     "id": "aw-core",
     "name": "Aardwolf Core",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "author": "Solao",
     "description": "GMCP negotiation and session bootstrap. Required by the other Aardwolf panels.",
     "category": "utilities",
@@ -20,7 +20,7 @@
   {
     "id": "aw-group",
     "name": "Aardwolf Group",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "author": "Solao",
     "description": "Group roster with per-member health, mana, moves and level. Shows you when ungrouped.",
     "category": "widgets",
@@ -29,7 +29,7 @@
   {
     "id": "aw-portrait",
     "name": "Aardwolf Character Info",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "author": "Solao",
     "description": "Character panel: portrait, level, stat grid, vitals, alignment and experience to level.",
     "category": "widgets",
@@ -38,7 +38,7 @@
   {
     "id": "aw-snd",
     "name": "Aardwolf Search and Destroy",
-    "version": "1.12.0",
+    "version": "1.12.1",
     "author": "Solao",
     "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
     "category": "utilities",
@@ -56,7 +56,7 @@
   {
     "id": "aw-vitals",
     "name": "Aardwolf Live Vitals",
-    "version": "1.2.2",
+    "version": "1.3.0",
     "author": "Solao",
     "description": "Wide HP, mana and move gauges with a target focus readout.",
     "category": "widgets",
