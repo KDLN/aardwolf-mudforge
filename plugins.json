@@ -61,5 +61,14 @@
     "description": "Wide HP, mana and move gauges with a target focus readout.",
     "category": "widgets",
     "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-vitals.json"
+  },
+  {
+    "id": "aw-who",
+    "name": "Aardwolf Players",
+    "version": "1.0.0",
+    "author": "Solao",
+    "description": "Who list with per-player tell, whois and finger, a searchable history and timed sweeps.",
+    "category": "widgets",
+    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.json"
   }
 ]
