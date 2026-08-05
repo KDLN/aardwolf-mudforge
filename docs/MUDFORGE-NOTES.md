@@ -85,7 +85,21 @@ Lua allows shadowing; the transpiler emits `let` and rejects it with
 `Cannot declare a let variable twice`, failing the **entire plugin load**.
 Nested closures are fine — same block is not.
 
-### 10. Don't assume the whole stdlib
+### 10. `onLine` takes three arguments, and the first is not the line
+
+```lua
+function onLine(sessionId, rawLine, cleanLine)
+```
+
+Written as `onLine(line)` every pattern matches against
+`session-1785816768709-k8wpur` — 50 lines seen, 0 matches, and no error
+anywhere to say why. `cleanLine` arrives with colour already stripped, which
+matters for anything anchored at `^`: who output is heavily coloured and an
+escape sequence in front of the text defeats the anchor.
+
+Returning `false` discards the line. Returning nothing keeps it.
+
+### 11. Don't assume the whole stdlib
 
 `table.concat(t, sep, i, j)`'s start-index form and similar corners are worth
 avoiding. `io` and `os` exist but are restricted implementations.
