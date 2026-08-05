@@ -184,6 +184,63 @@ SETTINGS = {
     "recentRoomsCount": 100, "recentRoomsColor": "#ffaf00",
 }
 
+#
+# MUSHclient stores an environment's colour as an ANSI index, which is what the
+# mapper drew with. The values confirm it: ocean is 4 (blue), field 2 (green),
+# forest 10 (bright green), mountain 3 (brown), air 14 (cyan), sun 11 (yellow).
+#
+# These are the xterm values for the 16 ANSI slots. Bright red at index 9 rather
+# than pure #ff0000 because a wall of saturated primaries is unreadable at map
+# zoom, which is presumably why MUSHclient's own palette is muted too.
+#
+ANSI_HEX = {
+    0:  "#2c3e50", 1:  "#c0392b", 2:  "#27ae60", 3:  "#b9770e",
+    4:  "#2980b9", 5:  "#8e44ad", 6:  "#16a085", 7:  "#95a5a6",
+    8:  "#5d6d7e", 9:  "#e74c3c", 10: "#2ecc71", 11: "#f1c40f",
+    12: "#3498db", 13: "#af7ac5", 14: "#48c9b0", 15: "#ecf0f1",
+}
+
+
+def terrain_styles(con, existing):
+    """MUSHclient's terrain colours, in MudForge's terrainStyles shape.
+
+    Rooms carry their terrain by NAME and terrainStyles is keyed by name, so the
+    two line up without a translation table. 134 environments come over, not
+    just the forty-odd currently in use — a room in an area you map later
+    already has its colour waiting.
+
+    Whatever the client already had is kept underneath: a colour you set by hand
+    for a terrain MUSHclient never knew about survives, and 'default' stays put
+    since that's the fallback for anything unmatched.
+    """
+    styles = []
+    seen = set()
+
+    for st in (existing or []):
+        if isinstance(st, dict) and st.get("name"):
+            styles.append({"name": st["name"], "color": st.get("color", "#3498db")})
+            seen.add(st["name"])
+
+    added = 0
+    for e in con.execute("SELECT name, color FROM environments ORDER BY name"):
+        name = (e["name"] or "").strip()
+        if not name:
+            continue
+
+        hexcode = ANSI_HEX.get(int(e["color"] or 7), "#95a5a6")
+
+        if name in seen:
+            # MUSHclient wins for a terrain it defines; that's the point
+            for st in styles:
+                if st["name"] == name:
+                    st["color"] = hexcode
+        else:
+            styles.append({"name": name, "color": hexcode})
+            added += 1
+
+    return styles, added
+
+
 # the export writes n/e/s/w/u/d, not the long names
 SHORT = {"north": "n", "south": "s", "east": "e", "west": "w",
          "up": "u", "down": "d"}
@@ -211,7 +268,7 @@ def load_settings(path):
 
 
 def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
-               settings=None, env_colors=None):
+               settings=None, env_colors=None, styles=None):
     """MudForge's own map format, straight from an export of a live map.
 
     Rooms carry their exits inline as {direction: vnum} — there's no separate
@@ -273,6 +330,9 @@ def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
     need = int(len(out) * 1.5) + 1000
     if int(conf.get("maxRooms") or 0) < need:
         conf["maxRooms"] = need
+
+    if styles:
+        conf["terrainStyles"] = styles
 
     doc = {
         "rooms": out,
@@ -376,14 +436,17 @@ def main():
     if len(sys.argv) > 3 and os.path.isfile(sys.argv[3]):
         conf, env_colors = load_settings(sys.argv[3])
 
+    styles, added = terrain_styles(con, (conf or {}).get("terrainStyles"))
+
     json_path = os.path.join(OUT, "aardwolf-map.json")
     n_json = write_json(json_path, keep, links, specials, pos, keys, titles,
-                        stamp, conf, env_colors)
+                        stamp, conf, env_colors, styles)
 
     print(f"rooms     {len(rooms) - skipped}"
           + (f"   ({skipped} nomap room(s) skipped)" if skipped else ""))
     print(f"exits     {len(plain)} plain, {len(doors)} door, {len(special)} special")
     print(f"areas     {len(keys)}")
+    print(f"terrain   {len(styles)} colour(s), {added} from MUSHclient")
     print(f"laid out  {len(pos)} room(s), {overlaps} overlapping cell(s)")
     print(f"wrote     {json_path} ({os.path.getsize(json_path) // 1024} KB)")
     return 0
