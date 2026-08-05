@@ -1,74 +1,122 @@
-[
-  {
-    "id": "aw-chat",
-    "name": "Aardwolf Comms",
-    "version": "1.12.1",
-    "author": "Solao",
-    "description": "Channel panel with tabs, per-channel routing, gagging and custom regex captures.",
-    "category": "widgets",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-chat.json"
-  },
-  {
-    "id": "aw-core",
-    "name": "Aardwolf Core",
-    "version": "2.6.0",
-    "author": "Solao",
-    "description": "GMCP negotiation and session bootstrap. Required by the other Aardwolf panels.",
-    "category": "utilities",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-core.json"
-  },
-  {
-    "id": "aw-group",
-    "name": "Aardwolf Group",
-    "version": "1.2.1",
-    "author": "Solao",
-    "description": "Group roster with per-member health, mana, moves and level. Shows you when ungrouped.",
-    "category": "widgets",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-group.json"
-  },
-  {
-    "id": "aw-portrait",
-    "name": "Aardwolf Character Info",
-    "version": "1.11.1",
-    "author": "Solao",
-    "description": "Character panel: portrait, level, stat grid, vitals, alignment and experience to level.",
-    "category": "widgets",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-portrait.json"
-  },
-  {
-    "id": "aw-snd",
-    "name": "Aardwolf Search and Destroy",
-    "version": "1.12.2",
-    "author": "Solao",
-    "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
-    "category": "utilities",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-snd.json"
-  },
-  {
-    "id": "aw-theme-bloodmoon",
-    "name": "Blood Moon",
-    "version": "1.0.4",
-    "author": "Solao",
-    "description": "Dark Aardwolf theme in the MUD's own brick red, parchment and steel.",
-    "category": "themes",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-theme-bloodmoon.json"
-  },
-  {
-    "id": "aw-vitals",
-    "name": "Aardwolf Live Vitals",
-    "version": "1.3.1",
-    "author": "Solao",
-    "description": "Wide HP, mana and move gauges with a target focus readout.",
-    "category": "widgets",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-vitals.json"
-  },
-  {
-    "id": "aw-who",
-    "name": "Aardwolf Players",
-    "version": "1.1.0",
-    "author": "Solao",
-    "description": "Who list with per-player tell, whois and finger, a searchable history and timed sweeps.",
-    "category": "widgets",
-    "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.json"
-  }
-]
+{
+  "schemaVersion": 1,
+  "name": "Solao's Aardwolf Plugins",
+  "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
+  "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
+  "generated": "2026-08-05T17:05:57Z",
+  "pluginCount": 8,
+  "plugins": [
+    {
+      "id": "aw-chat",
+      "name": "Aardwolf Comms",
+      "version": "1.12.1",
+      "author": "Solao",
+      "description": "Channel panel with tabs, per-channel routing, gagging and custom regex captures.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-chat.lua",
+      "format": "lua",
+      "sha256": "98e0cac61c4b65ce443ba0d4c0042fe9fc2f5780855110ee956ff8e0a0f2623e",
+      "size": 50044,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-core",
+      "name": "Aardwolf Core",
+      "version": "2.6.0",
+      "author": "Solao",
+      "description": "GMCP negotiation and session bootstrap. Required by the other Aardwolf panels.",
+      "category": "utilities",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-core.lua",
+      "format": "lua",
+      "sha256": "cd813b6bd11ed0bb689121ea851bc7c23e97c23994ab449ed6a8b28753cd2d05",
+      "size": 34586,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-group",
+      "name": "Aardwolf Group",
+      "version": "1.2.1",
+      "author": "Solao",
+      "description": "Group roster with per-member health, mana, moves and level. Shows you when ungrouped.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-group.lua",
+      "format": "lua",
+      "sha256": "d650c6df52c899a8eb99df0b09d787cf84d60dd2a0db9ae25d8d18b59471f3d9",
+      "size": 15040,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-portrait",
+      "name": "Aardwolf Character Info",
+      "version": "1.11.1",
+      "author": "Solao",
+      "description": "Character panel: portrait, level, stat grid, vitals, alignment and experience to level.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-portrait.lua",
+      "format": "lua",
+      "sha256": "734167cf13623648ef73d7c189c6a782e7131027e8a9a54452820ff4072d3b67",
+      "size": 52542,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-snd",
+      "name": "Aardwolf Search and Destroy",
+      "version": "1.12.2",
+      "author": "Solao",
+      "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
+      "category": "utilities",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-snd.lua",
+      "format": "lua",
+      "sha256": "60c987156b11c3c67250d2ff95d5162039368fb632e5d2f5830f70139a6746ba",
+      "size": 194734,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-theme-bloodmoon",
+      "name": "Blood Moon",
+      "version": "1.0.4",
+      "author": "Solao",
+      "description": "Dark Aardwolf theme in the MUD's own brick red, parchment and steel.",
+      "category": "themes",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-theme-bloodmoon.lua",
+      "format": "lua",
+      "sha256": "28eb43950e8fc0a63b18d2ccccfc83dab48ffd6e1bf8b234469721af8cd2499d",
+      "size": 4182,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-vitals",
+      "name": "Aardwolf Live Vitals",
+      "version": "1.3.1",
+      "author": "Solao",
+      "description": "Wide HP, mana and move gauges with a target focus readout.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-vitals.lua",
+      "format": "lua",
+      "sha256": "683da70084558838a5cb26c2017b90ec89c817f1171bdeb793c9edb9f250795e",
+      "size": 22988,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-who",
+      "name": "Aardwolf Players",
+      "version": "1.1.0",
+      "author": "Solao",
+      "description": "Who list with per-player tell, whois and finger, a searchable history and timed sweeps.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.lua",
+      "format": "lua",
+      "sha256": "f7bb24257a548af45e75b29fc0b846f0b2cd9fcfaa791575fa8348c76ddffb29",
+      "size": 27045,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    }
+  ]
+}
