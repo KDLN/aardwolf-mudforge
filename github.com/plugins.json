@@ -65,7 +65,7 @@
   {
     "id": "aw-who",
     "name": "Aardwolf Players",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "Solao",
     "description": "Who list with per-player tell, whois and finger, a searchable history and timed sweeps.",
     "category": "widgets",
