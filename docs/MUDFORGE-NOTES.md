@@ -84,6 +84,38 @@ prints `null`, and JS `undefined` reaching a string field arrives as the
 literal text `"undefined"` — so `x or ""` never fires and a panel cheerfully
 renders `SPRITE UNDEFINED`.
 
+### 5b. A trigger created mid-packet never sees that packet
+
+Register every trigger at `init` and gate it on state. Do NOT create one from
+inside another trigger's callback to catch the lines that follow.
+
+The identify box arrives whole — `Keywords`, `Name`, `Type`, all in one
+packet. Arming the row trigger from the `Keywords` callback meant `Keywords`
+was captured (it IS the opening line) and every row after it was missed, so
+every record stored under an undefined name. The same defect silently broke
+the `{roomchars}` player capture and Core's tag-block gag, where the whole
+block arrives at once and went ungagged.
+
+**The MUSHclient set had this right and the Mudlet port lost it.** MUSHclient
+declares every trigger up front with `enabled="n"` and flips the flag;
+Mudlet's `tempRegexTrigger` works there because it feeds triggers line by
+line. Porting the Mudlet shape to this client reintroduces the bug — when the
+two disagree, MUSHclient's is the one that survives a packet-at-a-time
+runtime.
+
+```lua
+-- wrong: the rest of the box is already in this packet
+addTrigger("^\\| Keywords", function()
+    rowTrig = addTrigger("^[|+](.*)$", read_row, { type = "regex" })
+end, { type = "regex" })
+
+-- right: it exists before the packet does
+addTrigger("^[|+](.*)$", function(c, l, w)
+    if not inBox then return end
+    read_row(c, l, w)
+end, { type = "regex" })
+```
+
 ### 6. Nested tables from `loadTable` aren't safely indexable
 
 Even behind a `type()` guard. `cfg.size = { width, height }` kept throwing on
