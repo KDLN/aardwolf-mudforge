@@ -176,26 +176,10 @@ def main():
 
     cmd = [sys.executable, os.path.join(HERE, "import-mushmap.py"), db, work]
 
-    #
-    # Asked, not assumed. Terrain colour already distinguishes these rooms, and
-    # 323 badges is a decision about how someone's map looks — not something to
-    # make on their behalf.
-    #
-    try:
-        want = input("  Mark shops with $ and healers with + ? [y/N] ").strip().lower()
-    except EOFError:
-        want = ""
-
-
     export = newest_export()
     if export:
         print(f"  Keeping your map settings from {os.path.basename(export)}")
         cmd.append(export)
-    elif want in ("y", "yes"):
-        cmd.append("")          # placeholder: symbols are the fourth argument
-
-    if want in ("y", "yes"):
-        cmd.append("1")
 
     rc = subprocess.call(cmd)
     if rc != 0:
