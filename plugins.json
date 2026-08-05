@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T18:20:50Z",
+  "generated": "2026-08-05T18:22:28Z",
   "pluginCount": 8,
   "plugins": [
     {
@@ -107,14 +107,14 @@
     {
       "id": "aw-who",
       "name": "Aardwolf Players",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "author": "Solao",
       "description": "Who list with per-player tell, whois and finger, a searchable history and timed sweeps.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.json",
       "format": "json",
-      "sha256": "4b6ae4d4d98b3206efe80e9b22fc43896a599f82bd6110e3ea1330b05d65885e",
-      "size": 41318,
+      "sha256": "d5053e6de11d0be1e5584d8109c2cf4a53d909775d48b629b8489692db23a4a0",
+      "size": 42962,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     }
