@@ -247,6 +247,30 @@ SHORT = {"north": "n", "south": "s", "east": "e", "west": "w",
          "up": "u", "down": "d"}
 
 
+#
+# What a room flag gets drawn as. MudForge renders this as a badge on the room
+# square — legible at map zoom and styled to match, which is why there are no
+# sprites here.
+#
+# Only the two worth hunting for. 'safe' is on 250 rooms and marks the absence
+# of danger, which is noise; the rest can be added when they earn it.
+#
+FLAG_SYMBOL = [("shop", "$"), ("healer", "+")]
+
+
+def symbol_for(details):
+    """First matching flag wins. A room that is both a shop and a healer is
+    rare enough that arguing about precedence costs more than it's worth."""
+    if not details:
+        return None
+
+    have = {d.strip() for d in details.split(",")}
+    for flag, mark in FLAG_SYMBOL:
+        if flag in have:
+            return mark
+    return None
+
+
 def load_settings(path):
     """Lift settings and env colours out of an export MudForge wrote.
 
@@ -265,11 +289,19 @@ def load_settings(path):
 
     st = d.get("settings") if isinstance(d.get("settings"), dict) else None
     ex = d.get("extras") if isinstance(d.get("extras"), dict) else {}
-    return st, (ex.get("envColors") if isinstance(ex.get("envColors"), dict) else None)
+
+    # symbols already on rooms, so one set by hand isn't wiped by an import
+    # that had no opinion about that room
+    marks = {}
+    for r in (d.get("rooms") or []):
+        if isinstance(r, dict) and r.get("symbol") and r.get("num") is not None:
+            marks[int(r["num"])] = r["symbol"]
+
+    return st, (ex.get("envColors") if isinstance(ex.get("envColors"), dict) else None), marks
 
 
 def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
-               settings=None, env_colors=None, styles=None):
+               settings=None, env_colors=None, styles=None, marks=None):
     """MudForge's own map format, straight from an export of a live map.
 
     Rooms carry their exits inline as {direction: vnum} — there's no separate
@@ -316,6 +348,17 @@ def write_json(path, rooms, links, specials, pos, areas, titles, stamp,
 
         if r.get("info"):
             room["details"] = r["info"]
+
+        #
+        # The flag decides, and anything already marked by hand is left alone —
+        # the import has an opinion about shops and healers and none at all
+        # about the room you tagged yourself.
+        #
+        mark = symbol_for(r.get("info"))
+        if not mark and marks:
+            mark = marks.get(uid)
+        if mark:
+            room["symbol"] = mark
 
         out.append(room)
 
@@ -433,21 +476,25 @@ def main():
     stamp = int(os.path.getmtime(db) * 1000)
 
     # third argument: an export MudForge wrote, to inherit map settings from
-    conf, env_colors = (None, None)
+    conf, env_colors, marks = (None, None, {})
     if len(sys.argv) > 3 and os.path.isfile(sys.argv[3]):
-        conf, env_colors = load_settings(sys.argv[3])
+        conf, env_colors, marks = load_settings(sys.argv[3])
 
     styles, added = terrain_styles(con, (conf or {}).get("terrainStyles"))
 
     json_path = os.path.join(OUT, "aardwolf-map.json")
     n_json = write_json(json_path, keep, links, specials, pos, keys, titles,
-                        stamp, conf, env_colors, styles)
+                        stamp, conf, env_colors, styles, marks)
 
     print(f"rooms     {len(rooms) - skipped}"
           + (f"   ({skipped} nomap room(s) skipped)" if skipped else ""))
     print(f"exits     {len(plain)} plain, {len(doors)} door, {len(special)} special")
     print(f"areas     {len(keys)}")
     print(f"terrain   {len(styles)} colour(s), {added} from MUSHclient")
+
+    shops = sum(1 for r in keep.values() if symbol_for(r.get("info")) == "$")
+    heals = sum(1 for r in keep.values() if symbol_for(r.get("info")) == "+")
+    print(f"symbols   {shops} shop, {heals} healer, {len(marks)} kept from your map")
     print(f"laid out  {len(pos)} room(s), {overlaps} overlapping cell(s)")
     print(f"wrote     {json_path} ({os.path.getsize(json_path) // 1024} KB)")
     return 0
