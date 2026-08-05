@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T19:04:53Z",
+  "generated": "2026-08-05T19:11:49Z",
   "pluginCount": 9,
   "plugins": [
     {
@@ -65,14 +65,14 @@
     {
       "id": "aw-shop",
       "name": "Aardwolf Shop",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Solao",
       "description": "Shop stock in a panel. Click a name to appraise it, a number to buy that many.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-shop.json",
       "format": "json",
-      "sha256": "fd9337789f088eed3d7d701d5a9394d059168c0e50c707e0650d074ee1ff27ce",
-      "size": 25727,
+      "sha256": "9a35cd270afb3b76cd6a0a6f3e12f99c84d9d86baa3f15248046365fa96cf274",
+      "size": 29376,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
