@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T21:30:15Z",
+  "generated": "2026-08-05T21:34:28Z",
   "pluginCount": 10,
   "plugins": [
     {
@@ -51,14 +51,14 @@
     {
       "id": "aw-loot",
       "name": "Aardwolf Loot Tracker",
-      "version": "1.6.1",
+      "version": "1.6.2",
       "author": "Solao",
       "description": "Records what drops from what, shop stock and room resources, and parses every id box that scrolls past.",
       "category": "utilities",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-loot.json",
       "format": "json",
-      "sha256": "66c934b94fa0d948df8312d3cc31ef9b5dd466dbab6ce0ee08a0973239258dfc",
-      "size": 99926,
+      "sha256": "d239240096b2fb0a76c8bf92126ad8db9c1087a4483cc443a0dbc32a37f62650",
+      "size": 101658,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
@@ -79,14 +79,14 @@
     {
       "id": "aw-shop",
       "name": "Aardwolf Shop",
-      "version": "1.4.0",
+      "version": "1.4.1",
       "author": "Solao",
       "description": "Shop stock in a panel. Click a name to appraise it, a number to buy that many.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-shop.json",
       "format": "json",
-      "sha256": "f78630fa78954e002d293d26b92721d617a38544e52e723c7fd4df32e4db54bb",
-      "size": 46146,
+      "sha256": "8f3528f52b854dcb8153a65ec222e7ec9fe57f1626ecd5b45656a9e63ba53048",
+      "size": 47038,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
