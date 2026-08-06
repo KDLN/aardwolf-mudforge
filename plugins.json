@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-06T03:40:02Z",
+  "generated": "2026-08-06T03:45:34Z",
   "pluginCount": 11,
   "plugins": [
     {
@@ -23,14 +23,14 @@
     {
       "id": "aw-chat",
       "name": "Aardwolf Comms",
-      "version": "1.14.1",
+      "version": "1.14.2",
       "author": "Solao",
       "description": "Channel panel with tabs, per-channel routing, gagging and custom regex captures.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-chat.json",
       "format": "json",
-      "sha256": "6dc4b6c5f3bba33162ba9c476f8935ff6a70c195da29faee868516082b05167f",
-      "size": 63133,
+      "sha256": "490ea9e48678187bd90066812c4b85cf63ca25cd55819241411eb7b4963920d6",
+      "size": 63651,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
