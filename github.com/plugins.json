@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-06T19:37:28Z",
+  "generated": "2026-08-06T19:42:42Z",
   "pluginCount": 12,
   "plugins": [
     {
@@ -65,14 +65,14 @@
     {
       "id": "aw-group",
       "name": "Aardwolf Group",
-      "version": "1.2.2",
+      "version": "1.3.0",
       "author": "Solao",
       "description": "Group roster with per-member health, mana, moves and level. Shows you when ungrouped.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-group.json",
       "format": "json",
-      "sha256": "36359a15abbd1c1e560e9a82dda6b4a768461fd165a81dbbc4ebf42d974926ae",
-      "size": 16650,
+      "sha256": "3450ec23b968ea13827854552e2cdb3cd58fc897b31fee403c2c9bf50169ec16",
+      "size": 19176,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
