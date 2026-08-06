@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-05T22:55:39Z",
+  "generated": "2026-08-06T02:30:20Z",
   "pluginCount": 10,
   "plugins": [
     {
@@ -23,14 +23,14 @@
     {
       "id": "aw-core",
       "name": "Aardwolf Core",
-      "version": "2.9.0",
+      "version": "2.10.0",
       "author": "Solao",
       "description": "GMCP negotiation and session bootstrap. Required by the other Aardwolf panels.",
       "category": "utilities",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-core.json",
       "format": "json",
-      "sha256": "e69fae5442f7fa37d19c7aeabed1852265adae593b7b3c621bf66866fce8cfa2",
-      "size": 47818,
+      "sha256": "7fd67f6d0d87873da2bec269602b934f296a19ad634cb79bfede7ccd28f3ae08",
+      "size": 46841,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
