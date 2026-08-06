@@ -3,8 +3,8 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-06T14:30:24Z",
-  "pluginCount": 11,
+  "generated": "2026-08-06T14:50:51Z",
+  "pluginCount": 12,
   "plugins": [
     {
       "id": "aw-ascii-map",
@@ -45,6 +45,20 @@
       "format": "json",
       "sha256": "7fd67f6d0d87873da2bec269602b934f296a19ad634cb79bfede7ccd28f3ae08",
       "size": 46841,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-eqsearch",
+      "name": "Aardwolf EQ Search",
+      "version": "1.0.0",
+      "author": "Solao",
+      "description": "'search all' and 'eqsearch all' in a panel of their own, fresh each run, colours intact.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-eqsearch.json",
+      "format": "json",
+      "sha256": "98b784ffa5341ed672c487d09b4a18f349c7280aed79bac6b24974cc4b834a2e",
+      "size": 17613,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },

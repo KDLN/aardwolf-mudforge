@@ -67,13 +67,14 @@ status. It has no window of its own beyond a settings pane.
 | **Aardwolf Group** | Group roster with per-member health, mana, moves and level. |
 | **Aardwolf Search and Destroy** | Quest, campaign and gquest targets. Learned mob database, hunt, hunt trick, click-to-walk. |
 | **Aardwolf ASCII Map** | The MUD's own ASCII map, scaled to fit its panel, colours intact. Capture mechanism from MudForge's ASCII Map Widget example. |
+| **Aardwolf EQ Search** | `search all` and `eqsearch all` in a panel of their own, fresh each run, colours intact. |
 | **Aardwolf Loot Tracker** | Records what drops from what, shop stock and room resources, and parses every identify box that scrolls past. Shares into a pooled database. |
 | **Aardwolf Shop** | `list` in a shop as clickable rows. Click a name to appraise it, a number to buy that many. |
 | **Blood Moon** | Dark theme in Aardwolf's own brick red, parchment and steel. Optional. |
 
 Each panel keeps its settings behind the gear icon in its own titlebar. The
 text commands (`/awcore`, `/awchar`, `/chat`, `/snd`, `/awvitals`, `/awgroup`,
-`/shop`, `/who`, `/loot`, `/awmap`)
+`/shop`, `/who`, `/loot`, `/awmap`, `/search`)
 do the same things for anyone who'd rather type.
 
 ---
