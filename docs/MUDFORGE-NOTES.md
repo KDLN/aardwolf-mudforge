@@ -391,6 +391,23 @@ the timer first rendered `0:00 left` on a panel with 25 real minutes on it.
 
 ## Aardwolf specifics
 
+### noexp is on the prompt, not in GMCP
+
+`char.status` carries `level` and `tnl` and nothing that says whether
+experience is being earned, and `Help/Prompt` documents no code for it. The
+MUD marks it on the prompt itself:
+
+```
+[368/368hp 219/219mn 717/717mv 54qt 1270tnl] >*[NOEXP]*
+```
+
+Read state off the prompt rather than off a toggle message. The prompt says
+what is true *now*, so a reload, a reconnect, or a session that started in
+noexp all settle on the first one — and the marker being absent is exactly as
+meaningful as it being present, which gives both directions from one signal.
+A toggle message only tells you about the moment it changed, and only if you
+were listening.
+
 - `Core.Supports.Set` **replaces**, never merges. See [CORE.md](CORE.md).
 - `char.vitals` carries current values only; the maxima are in
   `char.maxstats`. Percentages need both.
