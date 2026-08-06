@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-06T14:50:51Z",
+  "generated": "2026-08-06T15:02:30Z",
   "pluginCount": 12,
   "plugins": [
     {
@@ -23,14 +23,14 @@
     {
       "id": "aw-chat",
       "name": "Aardwolf Comms",
-      "version": "1.16.1",
+      "version": "1.17.0",
       "author": "Solao",
       "description": "Channel panel with tabs, per-channel routing, gagging and custom regex captures.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-chat.json",
       "format": "json",
-      "sha256": "6f6a7d3c67087d31ac10f3ca21db7ab7a9ddc3330710e31bd3af56076342f451",
-      "size": 60172,
+      "sha256": "ac0985d8727c6ae926ef63a3d50ac3a581a2dd24a7702ec2d3a209d6ce25f1e2",
+      "size": 60670,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
@@ -51,14 +51,14 @@
     {
       "id": "aw-eqsearch",
       "name": "Aardwolf EQ Search",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Solao",
       "description": "'search all' and 'eqsearch all' in a panel of their own, fresh each run, colours intact.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-eqsearch.json",
       "format": "json",
-      "sha256": "98b784ffa5341ed672c487d09b4a18f349c7280aed79bac6b24974cc4b834a2e",
-      "size": 17613,
+      "sha256": "b15d3c9d0a38ba96fccacebcbee0b2560a53782afd5d2c11ce4bcf2394e750fb",
+      "size": 17967,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
@@ -107,14 +107,14 @@
     {
       "id": "aw-shop",
       "name": "Aardwolf Shop",
-      "version": "1.4.2",
+      "version": "1.5.0",
       "author": "Solao",
       "description": "Shop stock in a panel. Click a name to appraise it, a number to buy that many.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-shop.json",
       "format": "json",
-      "sha256": "22082b5ddc52c682c2da03ccd44194023bdbe3344b0a0eff4de10ecf0fdf1ba6",
-      "size": 47499,
+      "sha256": "b11ced47e87a47ce1c389beb388423c056e98a784a74c3c7f866234d29081f51",
+      "size": 50751,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
