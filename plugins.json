@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-06T19:42:42Z",
+  "generated": "2026-08-06T19:49:20Z",
   "pluginCount": 12,
   "plugins": [
     {
@@ -121,14 +121,14 @@
     {
       "id": "aw-snd",
       "name": "Aardwolf Search and Destroy",
-      "version": "1.14.1",
+      "version": "1.15.0",
       "author": "Solao",
       "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
       "category": "utilities",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-snd.json",
       "format": "json",
-      "sha256": "eea63631fd5d010b4576ab1ad3c9ad5a59a33ec660a901dfcb649105ba9e0a54",
-      "size": 207113,
+      "sha256": "a954484d6d78d6d66bd9c78c1423e0ae04c3d58c21689b09b9f740795c0f0a3d",
+      "size": 210831,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
