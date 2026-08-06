@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-06T02:40:34Z",
+  "generated": "2026-08-06T02:41:59Z",
   "pluginCount": 11,
   "plugins": [
     {
@@ -65,14 +65,14 @@
     {
       "id": "aw-map",
       "name": "Aardwolf ASCII Map",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "Solao",
-      "description": "The MUD's ASCII map, scaled to fit its panel with colours intact. Derived from MudForge's ASCII Map Widget example.",
+      "description": "The MUD's ASCII map, scaled to fit its panel with colours intact. Capture mechanism from MudForge's ASCII Map Widget example.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-map.json",
       "format": "json",
-      "sha256": "121302ed8243b760dd696b891da0cafb3926ed98139ba3e8c69c87b8c6f8e8e9",
-      "size": 13866,
+      "sha256": "6fc07c87e5ced9bafeb2081fdb1815a8348b55facb3b1e68eda98cfe3d7fb543",
+      "size": 14210,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
