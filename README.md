@@ -73,9 +73,10 @@ status. It has no window of its own beyond a settings pane.
 | **Blood Moon** | Dark theme in Aardwolf's own brick red, parchment and steel. Optional. |
 
 Each panel keeps its settings behind the gear icon in its own titlebar. The
-text commands (`/awcore`, `/awchar`, `/chat`, `/snd`, `/awvitals`, `/awgroup`,
-`/shop`, `/who`, `/loot`, `/awmap`, `/search`)
-do the same things for anyone who'd rather type.
+text commands (`/awcore`, `/awchar`, `/awchat`, `/snd`, `/awvitals`, `/awgroup`,
+`/shop`, `/who`, `/loot`, `/awmap`, `/awsearch`) do the same things for anyone
+who'd rather type. Comms and EQ Search carry the `aw` prefix because `chat` and
+`search` are both Aardwolf commands, and a plugin command wins over the MUD's.
 
 ---
 

@@ -191,6 +191,20 @@ error, no log line and no way to tell it from a slow machine.
 `table.concat(t, sep, i, j)`'s start-index form and similar corners are worth
 avoiding. `io` and `os` exist but are restricted implementations.
 
+### 13. `registerCommand` shadows the MUD's command of the same name
+
+The client matches the first word of the input against registered commands
+before it decides whether to send anything, and a match means it never sends.
+So a plugin registering `search` eats Aardwolf's own `search all`, and one
+registering `chat` eats the chat channel — the player types the command they
+have used for years and gets plugin help back.
+
+Nothing warns about this and nothing shows it in a plugin list; it only turns
+up when someone uses the MUD command. Prefix anything that collides with a
+real MUD command: `awsearch`, `awchat`. Check `help <word>` on the MUD before
+picking a name, and remember Aardwolf abbreviates, so a short name can collide
+with the start of a longer one.
+
 ---
 
 ## Widget HTML and the sanitiser
