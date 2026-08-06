@@ -229,6 +229,27 @@ asymmetry is confusing and cost three attempts to pin down.
   updates faster than the user interacts — a one-second countdown re-rendering
   the whole panel is sixty rebuilds a minute, and it resets scroll each time.
 
+### `<a href>` renders, and clicking it crashes the client
+
+Not stripped — that was a guess and it was wrong. An anchor survives the
+sanitiser intact, keeps its `class`, and styles correctly. What it does on
+click is navigate the **widget's own iframe** to the URL, replacing the panel
+with the web page, and MudForge goes down with it. `target="_blank"` does not
+help: the frame has no permission to open a window, so it navigates in place
+instead.
+
+Tested four ways in one panel — bare anchor, classed anchor, anchor with
+`target`, and a `data-mud-action` span. All four render and all three anchors
+take the client out.
+
+**Never emit `href` in widget HTML.** To reach a browser, use a
+`data-mud-action` span and have the handler call `hyperlink(url, url)`, which
+prints a terminal link; an `http(s)` action there opens the browser properly.
+That is two clicks and it is the only route that exists.
+
+The same applies to the `prompt:` scheme, which was tried in the shop panel and
+did nothing at all — the anchor renders and the scheme is inert.
+
 ### Prefer CSS backgrounds to `<img>` for anything that might 404
 
 A failed `<img>` draws the browser's broken-image placeholder. A failed
