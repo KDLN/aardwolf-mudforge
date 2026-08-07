@@ -205,6 +205,45 @@ real MUD command: `awsearch`, `awchat`. Check `help <word>` on the MUD before
 picking a name, and remember Aardwolf abbreviates, so a short name can collide
 with the start of a longer one.
 
+### 9b. A `local` inside `init()` that shadows a file-scope name
+
+The narrow, lethal case of #9. It does not throw where you wrote it — it takes
+the **whole plugin down at load**:
+
+```
+[Plugin Error] loadPlugin(): Can't find variable: act
+```
+
+A **ReferenceError**, not a syntax error, which rules out anything to do with
+comments or quoting and points straight at a real identifier.
+
+```lua
+local function act() ... end            -- file scope
+
+function init()
+    registerWidgetEvent(widget, "action", function(data)
+        local act = tostring(data.action or "")   -- shadows it
+    end)
+
+    addTimer(2000, act, true)           -- ReferenceError, plugin never loads
+end
+```
+
+The transpiler hoists that nested declaration to `init`'s function scope, so
+`init`'s own reference — textually *after* the handler — resolves to a `let`
+that has not been initialised yet.
+
+**Ordinary duplicate locals across unrelated functions are fine and are
+everywhere** — aw-snd declares `n` thirteen times, aw-loot twelve. Four
+plugins even shadow a file-scope name from inside some other function and load
+without complaint. It is specifically shadowing across the
+`init` / nested-closure boundary that breaks, which is why the general "no
+duplicate locals" reading of #9 is too broad to be useful.
+
+Diagnosed by counting rather than reasoning: of 15 plugins, exactly one
+carried this shape and exactly one was failing to load. `tools/
+check-undefined.py` now fails the build on it.
+
 ### 14. An optional capture group must be last, or not exist
 
 Every plugin here reads captures through the same helper, which works out
