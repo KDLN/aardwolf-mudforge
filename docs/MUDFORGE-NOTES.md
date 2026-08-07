@@ -205,6 +205,43 @@ real MUD command: `awsearch`, `awchat`. Check `help <word>` on the MUD before
 picking a name, and remember Aardwolf abbreviates, so a short name can collide
 with the start of a longer one.
 
+### 14. An optional capture group must be last, or not exist
+
+Every plugin here reads captures through the same helper, which works out
+whether they arrived 0- or 1-based by asking whether the first one is a
+string:
+
+```lua
+local base = (type(c[0]) == "string") and 0 or 1
+local v = c[n - 1 + base]
+```
+
+That inference is sound right up until a group is allowed not to participate.
+A non-participating group is not a string, so a pattern whose **first** group
+is optional reads as 1-based and every lookup shifts by one — asking for
+capture 1 hands back capture 2. In a container listing that is the item's name
+where its quantity should be, silently, with no error.
+
+```
+^(?:\((\d+)\)\s+)?(.+)$      -- (  3) a potion   fine
+                             -- a potion         quantity reads "a potion"
+```
+
+Two patterns cost nothing and have no inference in them:
+
+```
+^\(\s*(\d+)\)\s+(.+)$        -- counted
+^(?!\()\s*(\S.*)$            -- not counted
+```
+
+A **trailing** optional group is safe, because nothing after it moves —
+`(\d+):(\d+)(?::(\d+))?` for `MM:SS` and `HH:MM:SS` is fine.
+
+Related, and the reason a missing group is worse here than in real Lua: when
+one does arrive as `""`, **`tonumber("")` is `nil` in Lua and `0` in
+JavaScript**. So the empty capture doesn't fail a numeric guard, it passes one
+with a confident zero. Test the string before converting it.
+
 ---
 
 ## Widget HTML and the sanitiser
