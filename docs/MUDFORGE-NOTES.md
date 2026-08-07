@@ -244,6 +244,31 @@ Diagnosed by counting rather than reasoning: of 15 plugins, exactly one
 carried this shape and exactly one was failing to load. `tools/
 check-undefined.py` now fails the build on it.
 
+### 13b. Every return path of a function must be the same width
+
+Multiple assignment compiles to **destructuring**, so a function that returns
+two values on one path and one on another breaks both ways at once:
+
+```lua
+local function can_cast(num)
+    if not skills[num] then return false, "not in your skill table" end
+    return true                     -- one value
+end
+
+local ok, why = can_cast(id)        -- "true is not iterable"
+local ok      = can_cast(id)        -- ok is the PAIR, which is truthy
+```
+
+The first is loud — `action handler for widget "…": true is not iterable`.
+The second is silent and much worse: the whole `[false, "reason"]` pair is
+collected into `ok`, and a pair is an object, so it is **truthy**. Every spell
+in the Spellups panel read `cast`, including ones the character could not
+possibly cast, and the entire potion path was unreachable. One cause, one
+visible symptom, one invisible one.
+
+Pad the short path — `return true, ""` — rather than fixing it at the call
+site, because the next call site will get it wrong again.
+
 ### 14. An optional capture group must be last, or not exist
 
 Every plugin here reads captures through the same helper, which works out
