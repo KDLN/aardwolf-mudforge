@@ -205,7 +205,7 @@ real MUD command: `awsearch`, `awchat`. Check `help <word>` on the MUD before
 picking a name, and remember Aardwolf abbreviates, so a short name can collide
 with the start of a longer one.
 
-### 9b. A `local` inside `init()` that shadows a file-scope name
+### 9b. A `local` that shadows a file-scope name
 
 The narrow, lethal case of #9. It does not throw where you wrote it — it takes
 the **whole plugin down at load**:
@@ -234,15 +234,22 @@ The transpiler hoists that nested declaration to `init`'s function scope, so
 that has not been initialised yet.
 
 **Ordinary duplicate locals across unrelated functions are fine and are
-everywhere** — aw-snd declares `n` thirteen times, aw-loot twelve. Four
-plugins even shadow a file-scope name from inside some other function and load
-without complaint. It is specifically shadowing across the
-`init` / nested-closure boundary that breaks, which is why the general "no
-duplicate locals" reading of #9 is too broad to be useful.
+everywhere** — aw-snd declares `n` thirteen times, aw-loot twelve. What breaks
+is reusing a name that already exists at **file scope**.
 
-Diagnosed by counting rather than reasoning: of 15 plugins, exactly one
-carried this shape and exactly one was failing to load. `tools/
-check-undefined.py` now fails the build on it.
+The first version of this note said "inside `init()`", because that is where
+the `act` collision was. That was too narrow and it cost a second outage:
+`left` broke the same way from inside `pots_load()`, a plain top-level
+function that `init` happens to call —
+
+```
+[Plugin Error] timer in "Aardwolf Spellups": Can't find variable: left
+```
+
+Do not try to model which callers are safe. **Never reuse a file-scope name as
+a local.** `tools/check-undefined.py` fails the build on any of them, and
+turning that check on found four more sitting in aw-core, aw-snd and aw-who,
+none of which had gone off yet.
 
 ### 13b. Every return path of a function must be the same width
 
