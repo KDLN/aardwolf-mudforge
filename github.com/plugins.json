@@ -3,8 +3,8 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-07T01:52:38Z",
-  "pluginCount": 12,
+  "generated": "2026-08-07T16:04:05Z",
+  "pluginCount": 13,
   "plugins": [
     {
       "id": "aw-ascii-map",
@@ -31,6 +31,20 @@
       "format": "json",
       "sha256": "ac0985d8727c6ae926ef63a3d50ac3a581a2dd24a7702ec2d3a209d6ce25f1e2",
       "size": 60670,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-coords",
+      "name": "Aardwolf Coordinates",
+      "version": "1.0.0",
+      "author": "Solao",
+      "description": "Grid position from {coords}, with a target and the run command to reach it.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-coords.json",
+      "format": "json",
+      "sha256": "7c5d16a662fb5f60fb9ab31f995106561a799dc63034d924a7207817cc4d5efa",
+      "size": 19281,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
