@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-07T19:50:44Z",
+  "generated": "2026-08-07T20:03:55Z",
   "pluginCount": 14,
   "plugins": [
     {
@@ -149,14 +149,14 @@
     {
       "id": "aw-spellup",
       "name": "Aardwolf Spellups",
-      "version": "1.2.1",
+      "version": "1.3.0",
       "author": "Solao",
       "description": "Buff manager: casts what you can cast, quaffs the highest-level potion for what you can't.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-spellup.json",
       "format": "json",
-      "sha256": "80b79db5eae830074d1317e96e6d0f541ff9d88eb810aac870a2c15fb9168e7d",
-      "size": 119977,
+      "sha256": "9adfa657b397647d23983b29e83938d5569ee10647ba7e19137ae9f0a3d23de6",
+      "size": 128229,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
@@ -191,14 +191,14 @@
     {
       "id": "aw-who",
       "name": "Aardwolf Players",
-      "version": "1.13.2",
+      "version": "1.13.3",
       "author": "Solao",
       "description": "Who list with per-player whois and finger, a searchable history and timed sweeps.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-who.json",
       "format": "json",
-      "sha256": "cb7a218c5919f3359b5b57e3be62627fd1009e07983ceca61c37bbcf85918019",
-      "size": 48698,
+      "sha256": "fcef1c7b47f4aa6a78f14c2bcf546f0868e128b0b01db0257c3e6ad8762cf7a4",
+      "size": 49345,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     }
