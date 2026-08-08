@@ -313,6 +313,29 @@ one does arrive as `""`, **`tonumber("")` is `nil` in Lua and `0` in
 JavaScript**. So the empty capture doesn't fail a numeric guard, it passes one
 with a confident zero. Test the string before converting it.
 
+### 16. A `hyperlink` command reaches a PLUGIN command, and keeps the prompt
+
+Measured, not assumed. The guide says a link's action is "sent to the MUD",
+which reads like it bypasses the client's own command matching. It does not:
+
+```lua
+hyperlink("$G[keep it]$w", 'awbuff add "potion eyes wolf"')
+```
+
+...runs the plugin's registered `awbuff` command. It is not echoed to
+Aardwolf, so there is no `Huh?` to design around.
+
+**This is the only clickable control that does not steal the prompt.** A
+`data-mud-action` div in a widget moves focus into that widget's iframe, and
+there is nothing a plugin can do about it — `/awcore api focus` and
+`/awcore api input` both return **0 functions**, so no focus API exists to
+call, and DOMPurify strips any script that would move focus back. Terminal
+links live in the terminal, so typing carries on straight afterwards.
+
+Worth reaching for when an action is something you fire and then keep playing:
+S&D's GO, a "keep it" on an identify, anything mid-combat. A panel button is
+still right for settings, where losing the prompt for a moment costs nothing.
+
 ---
 
 ## Widget HTML and the sanitiser
