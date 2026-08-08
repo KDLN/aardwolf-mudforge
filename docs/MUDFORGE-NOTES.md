@@ -276,6 +276,192 @@ visible symptom, one invisible one.
 Pad the short path — `return true, ""` — rather than fixing it at the call
 site, because the next call site will get it wrong again.
 
+### 13c. A field that `pairs` can see may still be unreachable by name
+
+Measured against the mapper. `findPath` returns the documented table and
+printing it whole shows every field:
+
+```
+raw: { found=false  distance=0  error=Start room NaN not found  directions={} }
+```
+
+...and `res.found` on that same table reads **undefined**. `pairs()` sees the
+keys, dot access does not. The reliable route is to walk the pairs and compare
+the key as text:
+
+```lua
+local function field(t, name)
+    if type(t) ~= "table" then return nil end
+    if t[name] ~= nil then return t[name] end
+    for k, v in pairs(t) do
+        if tostring(k) == name then return v end
+    end
+    return nil
+end
+```
+
+Related, and the reason positional reads need the same care: **keys arrive as
+strings**, so `v[0]` and `v["0"]` are not interchangeable. Test a key with
+`tonumber(k) ~= nil`, never `type(k) == "number"` — a check written the second
+way silently never fires.
+
+### 13d. Mapper calls that return one value arrive plain; more than one arrives as an array
+
+`getPlayerRoom()` and `getAreaList()` come back as a number and a map.
+`getMapRoom(vnum)` comes back as `{ 0 = <the room>, 1 = null }` — the extra
+element is the second return value.
+
+**`searchRooms(q)` is NOT one of these.** It returns a single value that
+happens to be a list: `{ 0=room, 1=room, 2=room }`. An unwrap rule of "all
+positional keys and a table at 0" collapses that to the first room, and the
+print that follows then enumerates that room's eleven FIELDS as if they were
+the results — three hits reported as one, convincingly. Unwrap only when
+element **1 is not a table**; `at(v,1) ~= nil` will not do, because null is not
+nil in this runtime and `getMapRoom`'s tuple would stop unwrapping.
+
+The cheap check: `shape(raw)` before `shape(val)`. A count that shrinks between
+them is the bug.
+
+### 13e. Read the API doc before designing against probe output
+
+`searchRooms(query, opts?)` is documented as returning an array of room tables,
+with `opts = { exact = false, caseSensitive = false }`. Half a day went into
+inferring that shape from print output and building a whole `getAreaRooms` +
+`getMapRoom` name index to work around a limitation that did not exist. The
+doc is `docs/MUDFORGE-API-GUIDE.md` §11.5, locally, and mudforge.org 403s a
+fetch — so read the local copy.
+
+Two things the doc settles that guessing got wrong:
+
+- `exact = true` is still **case-insensitive** unless `caseSensitive = true`.
+  Dortmund's "The common room" matches a query for "The Common Room".
+- `searchRooms` is map-wide with no area option, so a room name resolves to
+  several areas. Filter on the room's own `.area`; do not infer the area from
+  the name.
+
+### 13f. Custom exits: `;;` stacks commands, `wait(N)` is the client's
+
+`mapper help cexits`:
+
+    ;;        stack multiple commands     (open door;;north)
+    wait(N)   pause N seconds mid-move    (push lever;;wait(2.5);;go)
+
+`findPath().directions` is an array of **movement commands**, so a step through
+a custom exit arrives as the whole string. Aardwolf has no client-side
+separator — send that verbatim and the semicolons go on the wire as text, and
+`wait(2)` is a word the MUD does not know.
+
+`findPath` costs a compass exit and a custom exit the same, so where a room has
+both (47195 has `w: 49260` **and** `west;;say hi: 49260`) the route comes back
+as the bare compass move. That is backwards: a custom exit exists because
+someone recorded what actually works. Substitute it back in using the path's
+own `vnums` plus `getSpecialExits(room)` → `{ [command] = destVnum }`.
+
+Better still, hand a route containing one to `walkTo(vnum, cb)` — the client's
+walker already knows the separator and honours the pauses. It needs the map
+widget mounted, and answers `{ success = false, error = ... }` after ~2s when
+it is not, so keep a hand-sent fallback.
+
+### 13g. `ipairs` does NOT walk a mapper array — the keys are strings
+
+The guide says the 0-indexed lists "iterate with `ipairs(list)` (which converts
+correctly for you)". In this build it does not. The keys arrive as **strings**,
+so `ipairs` looks up the NUMBER `1`, finds nothing, and stops **before the
+first element**. It returns an empty walk, which reads exactly like "nothing
+matched" — no error, no warning.
+
+Measured: `searchRooms("The Common Room")` returns three rooms, and an `ipairs`
+loop over that same table yields none. The same probe resolved the room
+correctly one version earlier using a `pairs` walk.
+
+This is the same reason `at(v, i)` has to try `v[i]` and then `v[tostring(i)]`.
+
+Read them positionally, tolerating either key type, and keep the order:
+
+```lua
+local function mapl(v)
+    local out = {}
+    if type(v) ~= "table" then return out end
+
+    local i = 0
+    while true do
+        local e = v[i]
+        if e == nil then e = v[tostring(i)] end
+        if e == nil then break end
+        table.insert(out, e)
+        i = i + 1
+    end
+    if #out > 0 then return out end
+    -- then try 1-based, then pairs as a last resort
+end
+```
+
+`pairs` must stay the LAST resort: its order is undefined, and `findPath`'s
+directions scramble into a route that walks somewhere else entirely.
+
+**A Lua-table fixture hides this.** `{ "n", "n", "e" }` is 1-indexed with
+number keys, so `ipairs` walks it happily in the sim and fails in the client.
+Build mapper fixtures the way the bridge really hands them over —
+`{ ["0"] = "n", ["1"] = "n" }` — or the test passes on code that cannot work.
+
+### 13h. What the mapper calls actually cost
+
+Timed by `private/aw-probe.lua` (`probe cost`) against a 23,879-room map.
+Two runs, so the spread is real rather than a single sample:
+
+| call | per call |
+|---|---|
+| `getMapRoom(vnum)` | 0.004 – 0.010 ms |
+| `getSpecialExits(vnum)` | 0.006 – 0.018 ms |
+| `getPlayerRoom()` | 0.008 – 0.018 ms |
+| `findPath(a, b)` | 0.020 ms |
+| `getDistance(a, b)` | 0.040 – 0.060 ms |
+| `getAreaList()` | 0.140 – 0.210 ms |
+| `searchRooms(q, {exact=true})` | **1.10 – 1.20 ms** |
+| `searchRooms(q)` | **1.85 – 1.95 ms** |
+
+`searchRooms` is 50–450× everything else and is the only one worth caching or
+gating. Room reads are effectively free — a per-step `getSpecialExits` over a
+200-step path costs ~1.2 ms, less than one `searchRooms`.
+
+Note `findPath` is CHEAPER than `getDistance`, which is worth knowing before
+reaching for the "cheap" one.
+
+### 13i. An unassigned `local` is `undefined`, and `undefined == nil` is FALSE
+
+```lua
+local best, bestDist                        -- transpiles to a bare `let`
+...
+if d and (bestDist == nil or d < bestDist) then best, bestDist = vn, d end
+return best
+```
+
+`bestDist` is `undefined`, so `bestDist == nil` is **false**, `d < undefined`
+is false, and `best` is never assigned. The function then returns `undefined`
+— which is **truthy** (note 5), so the caller does not take its not-found
+branch either and prints the word "undefined" where a room number should be.
+
+That is exactly what `aw-probe` did: it resolved rooms correctly on 1.4.2
+because that version returned early on a single hit and never reached the
+comparison, and broke the moment the early return went away.
+
+Three things all agree it is fine: `luac -p` parses it, the Lua sim passes it
+(real Lua nil-initialises locals), and the shape is idiomatic Lua. Only the
+client disagrees.
+
+**Assign a sentinel and compare against a number:**
+
+```lua
+local best     = nil
+local bestDist = 1e9
+if d and d >= 0 and d < bestDist then best, bestDist = vn, d end
+```
+
+Where the accumulator is not numeric, carry its measure alongside
+(`bestLen = -1`) rather than re-deriving it from the accumulator and testing
+that for nil. `check-undefined.py` reports declaration-with-no-value followed
+by a `== nil` test.
+
 ### 14. An optional capture group must be last, or not exist
 
 Every plugin here reads captures through the same helper, which works out
