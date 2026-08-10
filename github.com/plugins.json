@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-10T16:16:29Z",
+  "generated": "2026-08-10T16:27:01Z",
   "pluginCount": 14,
   "plugins": [
     {
@@ -135,28 +135,28 @@
     {
       "id": "aw-snd",
       "name": "Aardwolf Search and Destroy",
-      "version": "1.40.0",
+      "version": "1.41.0",
       "author": "Solao",
       "description": "Quest, campaign and gquest targets with a learned mob database and click-to-walk.",
       "category": "utilities",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-snd.json",
       "format": "json",
-      "sha256": "8f3002c9004395028d8bb1561ac9a32b5fceb3decbe540bfc73ed1729dff459f",
-      "size": 305785,
+      "sha256": "0a23dfe995de33938a00663ea833b346cee3537552c40673c252fbce3463a46d",
+      "size": 308166,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
     {
       "id": "aw-spellup",
       "name": "Aardwolf Spellups",
-      "version": "1.14.0",
+      "version": "1.15.0",
       "author": "Solao",
       "description": "Buff manager: casts what you can cast, quaffs the highest-level potion for what you can't.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-spellup.json",
       "format": "json",
-      "sha256": "96c038ed7c74c748b51f808ca14ec36c23a5879e987ddef69b0bd31221eb30e1",
-      "size": 205080,
+      "sha256": "ddb2a65a6808b0cd4cccba6f27fc4534283fae1891063d17ea684ed5a24315b1",
+      "size": 207707,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
