@@ -462,6 +462,39 @@ Where the accumulator is not numeric, carry its measure alongside
 that for nil. `check-undefined.py` reports declaration-with-no-value followed
 by a `== nil` test.
 
+### 5b. ...and an unset TABLE FIELD is undefined too
+
+Note 5 says undefined is truthy. The version of it that actually ships bugs is
+the table field nobody declared:
+
+```lua
+local eng = { q = {}, saw = {} }          -- checking not declared
+
+eng.check = function() eng.checking = true end
+
+-- ...in a trigger, long before eng.check has ever run:
+if eng.checking then eng.saw[id] = true end
+```
+
+Real Lua nil-inits the field and the guard behaves. The client makes it
+`undefined`, which is truthy, so the branch is taken from the first line the
+MUD prints. In aw-spellup that was four `[Trigger Error]` lines on a plain
+`spellup`.
+
+**Declare every field in the constructor, false ones included.** `false`, not
+`0` and not `nil`: `nil` in a table constructor declares nothing at all, and 0
+is truthy in Lua and falsy in JS, which is not a difference to build on.
+
+The same bug was live in aw-portrait: `local ch = {}` and `if ch.level then
+"Lv. " .. ch.level` printed **"Lv. undefined"** instead of "Lv. --" any time
+`char.base` had not arrived.
+
+`tools/check-undefined.py` checks this now. It reports truthiness tests only —
+`t.x == nil` and `t.x == false` say what they mean — and it brace-matches the
+constructor rather than searching for the closing `\n}`, because a one-line
+table closes on its own line and the first version of the check silently
+treated the rest of the file as the table body.
+
 ### 17. Lua's 200 file-scope local limit is a real ceiling
 
 `aw-spellup.lua` is AT it. Adding one more `local` at file scope fails with
