@@ -489,11 +489,22 @@ The same bug was live in aw-portrait: `local ch = {}` and `if ch.level then
 "Lv. " .. ch.level` printed **"Lv. undefined"** instead of "Lv. --" any time
 `char.base` had not arrived.
 
+**A forward declaration is the same bug wearing a hat.** `local render` at
+column 0 with no value is fine; a function defined ABOVE that line and calling
+`render()` is not, because it binds to the global. aw-spellup had
+`eng.check_done` calling `render()` two hundred lines above `local render`, and
+it stayed invisible until a check finally took rows off the panel and something
+had to repaint. Put forward declarations near the top, above everything that
+uses them.
+
 `tools/check-undefined.py` checks this now. It reports truthiness tests only —
 `t.x == nil` and `t.x == false` say what they mean — and it brace-matches the
 constructor rather than searching for the closing `\n}`, because a one-line
 table closes on its own line and the first version of the check silently
-treated the rest of the file as the table body.
+treated the rest of the file as the table body. It reports forward
+declarations used above their `local` line as well — but only bare ones, since
+a general version of that check needs real scope analysis and a first attempt
+flagged thirty function-locals that merely shared a name.
 
 ### 17. Lua's 200 file-scope local limit is a real ceiling
 
