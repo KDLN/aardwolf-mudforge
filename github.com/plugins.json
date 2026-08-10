@@ -3,7 +3,7 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-10T15:03:11Z",
+  "generated": "2026-08-10T15:51:58Z",
   "pluginCount": 14,
   "plugins": [
     {
@@ -149,14 +149,14 @@
     {
       "id": "aw-spellup",
       "name": "Aardwolf Spellups",
-      "version": "1.12.0",
+      "version": "1.13.0",
       "author": "Solao",
       "description": "Buff manager: casts what you can cast, quaffs the highest-level potion for what you can't.",
       "category": "widgets",
       "downloadUrl": "https://raw.githubusercontent.com/SeanStoves/aardwolf-mudforge/main/dist/aw-spellup.json",
       "format": "json",
-      "sha256": "65c4ff81869031717fb803ba671131cb8d9746d6ee939952f095483033649fda",
-      "size": 173465,
+      "sha256": "b5b43fd5e0bfb6bfcf6fd81eb9774a9c20f761046d3498e891d1445df3fae59a",
+      "size": 197614,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },

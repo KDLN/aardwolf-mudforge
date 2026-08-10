@@ -462,6 +462,44 @@ Where the accumulator is not numeric, carry its measure alongside
 that for nil. `check-undefined.py` reports declaration-with-no-value followed
 by a `== nil` test.
 
+### 17. Lua's 200 file-scope local limit is a real ceiling
+
+`aw-spellup.lua` is AT it. Adding one more `local` at file scope fails with
+
+    too many local variables (limit is 200) in main function
+
+This is real Lua, not the transpiler — the client compiles to JS and would not
+care — but `luac -p` is the syntax gate and `tools/harness.lua` runs real Lua,
+so it stops the build either way.
+
+New machinery in a file near the limit goes in ONE table, not six locals.
+`aw-spellup` 1.13 added a whole engine — a queue, a coverage map, a send-time
+map, a retry counter and six functions — inside a single `local eng`:
+
+```lua
+local eng = { q = {}, cov = {}, last = {}, tries = {}, at = 0 }
+
+eng.why_not = function(num) ... end
+eng.fire    = function(num) ... end
+eng.drain   = function() ... end
+```
+
+`eng.fire = function()` is an assignment, not a declaration, so it costs
+nothing. `local function eng_fire()` would have cost a slot each.
+
+Two things that are easy to get wrong doing this:
+
+**Define the methods after everything they call.** A closure created before
+`local held` is declared does not see it — it reads the global, which is nil,
+and the transpiler's `let` makes it a TDZ error instead. The engine block sits
+directly below `held()` for exactly that reason, not next to the table.
+
+**Freeing a slot is usually a constant.** One file-scope constant used by one
+function becomes a literal inside it. `POT_AFF_WAIT = 5000` paid for `eng`.
+
+And check the name is free first. `cast` is already taken in aw-spellup — a
+duplicate file-scope local is note 9b, and it fails the whole plugin load.
+
 ### 14. An optional capture group must be last, or not exist
 
 Every plugin here reads captures through the same helper, which works out
