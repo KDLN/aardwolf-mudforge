@@ -676,6 +676,21 @@ background-image: url("remote.png"), url("data:image/png;base64,…");
 
 ## Widgets
 
+- **The client's font controls never reach an html widget's content.**
+  Measured on 1.2 with a debugger attached: the cog's Font Family/Size/Weight
+  (and the global Font Settings) set `--widget-font-size` on the widget's
+  HOST-side container. The panel content lives in an iframe, and an iframe
+  document inherits nothing from the page embedding it — its body sits at the
+  browser-default 16px Times New Roman with no injected style, no CSS variable
+  and no event. Nor can a plugin read the slider: `getWidgetSettings()` reads
+  a localStorage key (`mud-client-widget-settings`) this build never writes —
+  moving the slider fires zero storage writes and zero window events. So the
+  panels scale themselves: Core owns one number (`/awcore font`, broadcast as
+  `"aw-font"`), every stylesheet is em fractions of a base, and the base rides
+  as an **inline style on the root div** — inline `font-size` is geometry to
+  the sanitiser (kept — it is how the ASCII map fits its panel) and applies on
+  a plain repaint, where a rewritten `<style>` is ignored after the first
+  render.
 - **`name` is required** if a plugin creates more than one. The widget id is
   `pluginId + name`, defaulting to `"widget"` — two unnamed widgets resolve
   to the same id and the second silently returns the first.

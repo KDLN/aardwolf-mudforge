@@ -30,20 +30,20 @@ yours and they build themselves as you play.
 <!-- MFP-VERSIONS -->
 | Plugin | Version |
 |---|---|
-| Aardwolf Core | 2.10.3 |
-| Aardwolf Group | 1.3.2 |
-| Aardwolf Search and Destroy | 1.40.0 |
-| Aardwolf Shop | 1.5.4 |
-| Aardwolf ASCII Map | 1.3.3 |
-| Aardwolf EQ Search | 1.0.3 |
-| Aardwolf Spellups | 1.10.0 |
-| Aardwolf Character Info | 1.12.3 |
-| Aardwolf Live Vitals | 1.3.4 |
-| Aardwolf Players | 1.13.5 |
-| Aardwolf Loot Tracker | 1.13.5 |
-| Aardwolf Comms | 1.17.2 |
+| Aardwolf Core | 2.11.0 |
+| Aardwolf Group | 1.4.0 |
+| Aardwolf Search and Destroy | 1.42.0 |
+| Aardwolf Shop | 1.6.0 |
+| Aardwolf ASCII Map | 1.4.0 |
+| Aardwolf EQ Search | 1.1.0 |
+| Aardwolf Spellups | 1.16.0 |
+| Aardwolf Character Info | 1.13.0 |
+| Aardwolf Live Vitals | 1.4.0 |
+| Aardwolf Players | 1.14.0 |
+| Aardwolf Loot Tracker | 1.14.0 |
+| Aardwolf Comms | 1.18.0 |
 | Blood Moon | 1.0.7 |
-| Aardwolf Coordinates | 1.1.2 |
+| Aardwolf Coordinates | 1.2.0 |
 <!-- /MFP-VERSIONS -->
 
 The profile is a snapshot. Plugins move faster than it does, so add the
@@ -114,6 +114,14 @@ text commands (`/awcore`, `/awchar`, `/awchat`, `/snd`, `/awvitals`, `/awgroup`,
 `/shop`, `/who`, `/loot`, `/awmap`, `/awsearch`) do the same things for anyone
 who'd rather type. Comms and EQ Search carry the `aw` prefix because `chat` and
 `search` are both Aardwolf commands, and a plugin command wins over the MUD's.
+
+**`/awcore font <px>`** (or `+` / `-`) scales the text of every panel at once;
+`/awcore font off` puts them back. Any panel can hold its own size instead —
+`/awgroup font 12`, `/snd font 14`, and so on; `font auto` rejoins the suite.
+This exists because MudForge's own widget font controls stop at the widget
+frame: the client styles the host-side container, and a plugin panel's content
+lives in an iframe that inherits nothing from it. See the note in
+[docs/MUDFORGE-NOTES.md](docs/MUDFORGE-NOTES.md#widgets).
 
 ---
 
