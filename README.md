@@ -12,6 +12,43 @@ sends, so the panels stay right through a reconnect.
 
 ## Install
 
+### The whole thing, in one click
+
+Download **[aardwolf.mfp](https://github.com/SeanStoves/aardwolf-mudforge/raw/main/aardwolf.mfp)**
+and open it in MudForge: **Settings → Profile → Import**.
+
+That is the panel layout, the Blood Moon theme, the aliases, macros and
+per-plugin settings, and all fourteen plugins, in one file. Everything lands
+arranged the way the screenshots show rather than stacked in a corner waiting
+to be dragged.
+
+It carries no character data — no mob database, no who list, no map. Those are
+yours and they build themselves as you play.
+
+#### What is in it
+
+<!-- MFP-VERSIONS -->
+| Plugin | Version |
+|---|---|
+| Aardwolf Core | 2.10.3 |
+| Aardwolf Group | 1.3.2 |
+| Aardwolf Search and Destroy | 1.40.0 |
+| Aardwolf Shop | 1.5.4 |
+| Aardwolf ASCII Map | 1.3.3 |
+| Aardwolf EQ Search | 1.0.3 |
+| Aardwolf Spellups | 1.10.0 |
+| Aardwolf Character Info | 1.12.3 |
+| Aardwolf Live Vitals | 1.3.4 |
+| Aardwolf Players | 1.13.5 |
+| Aardwolf Loot Tracker | 1.13.5 |
+| Aardwolf Comms | 1.17.2 |
+| Blood Moon | 1.0.7 |
+| Aardwolf Coordinates | 1.1.2 |
+<!-- /MFP-VERSIONS -->
+
+The profile is a snapshot. Plugins move faster than it does, so add the
+repository below as well and the client will offer updates as they ship.
+
 ### As a plugin repository
 
 **Settings → Plugins → Add Repository**, and give it:
