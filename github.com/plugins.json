@@ -3,8 +3,8 @@
   "name": "Solao's Aardwolf Plugins",
   "description": "GMCP-driven Aardwolf panels: character, vitals, group, comms, quests and players.",
   "homepage": "https://github.com/SeanStoves/aardwolf-mudforge",
-  "generated": "2026-08-10T20:11:35Z",
-  "pluginCount": 14,
+  "generated": "2026-08-14T00:00:00Z",
+  "pluginCount": 15,
   "plugins": [
     {
       "id": "aw-ascii-map",
@@ -87,6 +87,20 @@
       "format": "json",
       "sha256": "1dd22e77511438ec9bed5707e2f106202ce696e35492df4ead521cce1701b6cf",
       "size": 22666,
+      "license": "MIT",
+      "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
+    },
+    {
+      "id": "aw-inv",
+      "name": "Aardwolf Inventory",
+      "version": "1.0.0",
+      "author": "Catdad",
+      "description": "Inventory, worn, keyring and vault in one searchable panel, indexed by serial.",
+      "category": "widgets",
+      "downloadUrl": "https://raw.githubusercontent.com/KDLN/aardwolf-mudforge/main/dist/aw-inv.json",
+      "format": "json",
+      "sha256": "e3f1317c342253e9cca4f393969e468212db077dc27543550dde9f6f7e55df31",
+      "size": 36663,
       "license": "MIT",
       "homepage": "https://github.com/SeanStoves/aardwolf-mudforge"
     },
