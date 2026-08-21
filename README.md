@@ -44,6 +44,7 @@ yours and they build themselves as you play.
 | Aardwolf Comms | 1.18.0 |
 | Blood Moon | 1.0.7 |
 | Aardwolf Coordinates | 1.2.0 |
+| Aardwolf Inventory | 3.2.1 |
 <!-- /MFP-VERSIONS -->
 
 The profile is a snapshot. Plugins move faster than it does, so add the
